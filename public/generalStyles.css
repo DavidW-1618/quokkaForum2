@@ -1,0 +1,68 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 15px 15px 0 15px; /* Todo: Make the padding situation less jenky in the footer. I don't want this zero here. */
+    text-align: center;
+    font-family: Arial, serif;
+    color: palegoldenrod;
+    font-size: 25px;
+    text-decoration: none;
+    /*margin-top: 20px;*/
+}
+.footer-container p {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+a {
+    color: palegoldenrod;
+    text-decoration: none;
+}
+
+.image-space-holder {
+    width: 250px;
+}
+
+p {
+    font-family: "monaco", monospace;
+    font-size: 20px;
+}
+button {
+    font-size: 20px;
+    font-family: "monaco", monospace;
+}
+
+#nav .navbar-dark .navbar-nav .nav-link {
+    /*color: #132020;*/
+    color: palegoldenrod;
+    /*text-shadow: 1px 1px 6px lightgoldenrodyellow;*/
+    font-size: 30px;
+    margin: 10px 20px;
+    font-family: "monaco", monospace;
+}
+
+li.nav-item {
+    /*border-left: 1px solid palegoldenrod;*/
+}
+
+.bg-dark {
+    background: #a57940 !important;
+    /*border: saddlebrown solid 2px !important;*/
+    /*background-image: linear-gradient(to right, slategrey, lightslategray, slategrey);*/
+
+}
+
+.navbar-expland-lg .navbar-colapse {
+    background-color: red !important;
+}
+
+#navbarNav {
+    justify-content: center;
+}

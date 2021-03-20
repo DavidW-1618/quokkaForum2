@@ -1,28 +1,28 @@
 <template>
 	<div class="outer-box">
-		<div v-if="clicked">
-			<div class="person">
-				<img class="person-img" src="../../public/images/cartoon-quokka.png">
-				<div class="personal-info">
-					<h3>{{name}}</h3>
-					<p>{{email}}</p>
-				</div>
-				<div class="control-buttons">
-					<div class="button">
-						<p class="button-text">Submit</p>
+		<div v-if="clicked" style="width: 100%">
+			<form>
+				<div class="person">
+					<img class="person-img" src="../../public/images/cartoon-quokka.png">
+					<div class="personal-info">
+						<input type="text" v-model="this.nameIn">
+						<input type="email" v-model="this.emailIn">
 					</div>
-					<div class="button" @click="hideAddForm">
-						<p class="button-text">Cancel</p>
+					<div class="control-buttons">
+						<div class="button">
+							<p class="button-text" @click="addComment()">Submit</p>
+						</div>
+						<div class="button" @click="hideAddForm">
+							<p class="button-text">Cancel</p>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="dividing-line"></div>
-			<p class="comment">{{comment}}</p>
+				<div class="dividing-line"></div>
+				<textarea class="comment" v-model="this.commentIn"></textarea>
+			</form>
 		</div>
-		<div v-else>
-			<div class="click-box" v-on:click="showAddForm">
-				<p class="button-text">Add {{questionOrResponse}}</p>
-			</div>
+		<div v-else class="click-box" v-on:click="showAddForm">
+			<p class="button-text">Add {{questionOrResponse}}</p>
 		</div>
 	</div>
 </template>
@@ -39,6 +39,9 @@ export default {
 			email: "007@MI6.gov",
 			comment: "Just go up to them and say hi. Try talking to them. Don't shoot them.",
 			clicked: false,
+			nameIn: "Name",
+			emailIn: "Email",
+			commentIn: "Comment",
 		}
 	},
 	computed: {
@@ -49,6 +52,9 @@ export default {
 				return "Response"
 			}
 		},
+		existingEmails() {
+			return this.$root.$data.persons.map(person => {return person.email});
+		},
 	},
 	methods: {
 		showAddForm() {
@@ -56,6 +62,45 @@ export default {
 		},
 		hideAddForm() {
 			this.clicked=false;
+		},
+		addComment() {
+			let curPerson = this.$root.$data.persons.find(person => person.email === this.emailIn);
+			if (curPerson == undefined) {
+				curPerson = {
+					name: this.nameIn,
+					email: this.emailIn,
+					bio: "",
+					age: "0",
+					gender: "Unknown",
+				};
+				this.$root.$data.persons.push(curPerson);
+			}
+			let newPost = {
+				id: this.$root.$data.nextId,
+				email: this.emailIn,
+				comment: this.commentIn,
+			};
+			this.$root.$data.nextId += 1;
+			if (this.questionId === -1) {
+				newPost.responses = [];
+				this.$root.$data.forumPosts.push(newPost);
+			} else {
+				let curQuestion = this.$root.$data.forumPosts.find(question => question.id === this.questionId);
+				if (curQuestion == undefined) {
+					console.log("ERROR: Tried to submit answer to nonexistent question.");
+					this.resetInput();
+					return;
+				}
+				curQuestion.responses.push(newPost)
+			}
+			this.resetInput();
+			return;
+		},
+		resetInput() {
+			this.nameIn = "Name";
+			this.emailIn = "Email";
+			this.commentIn = "Comment";
+			this.hideAddForm();
 		}
 	}
 }
@@ -73,6 +118,16 @@ export default {
 p {
 	font-family: "monaco", monospace;
 	font-size: 20px;
+}
+form {
+	width: inherit;
+}
+input {
+	margin: 10px;
+}
+textarea {
+	margin: 10px;
+	width: 96%;
 }
 
 .button-text {
@@ -97,6 +152,7 @@ p {
 }
 .person {
 	/*border: 2px black solid;*/
+	/*width: 100%;*/
 	display: flex;
 	align-items: center;
 }

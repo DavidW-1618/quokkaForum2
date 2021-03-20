@@ -1,33 +1,37 @@
 <template>
 	<div class="outer-box">
-		<div class="person">
-			<img class="person-img" src="../../public/images/cartoon-quokka.png">
-			<div class="personal-info">
-				<h3>{{name}}</h3>
-				<p>{{email}}</p>
-			</div>
-		</div>
-		<div class="dividing-line"></div>
-		<p class="comment">{{comment}}</p>
+		<p>Add {{questionOrResponse}}</p>
+<!--		<div class="person">-->
+<!--			<img class="person-img" src="../../public/images/cartoon-quokka.png">-->
+<!--			<div class="personal-info">-->
+<!--				<h3>{{name}}</h3>-->
+<!--				<p>{{email}}</p>-->
+<!--			</div>-->
+<!--		</div>-->
 	</div>
 </template>
 
 <script>
 export default {
-	name: "ForumPost",
+	name: "AddForumPost",
 	props: {
-		email: String,
-		comment: String,
-	},
-	computed: {
-		name() {
-			let person = this.$root.$data.persons.find(person => person.email === this.email)
-			return person.name
-		}
+		questionId: Number,
 	},
 	data() {
 		return {
+			name: "James Bond",
+			email: "007@MI6.gov",
+			comment: "Just go up to them and say hi. Try talking to them. Don't shoot them."
 		}
+	},
+	computed: {
+		questionOrResponse() {
+			if (this.questionId === -1) {
+				return "Question"
+			} else {
+				return "Response"
+			}
+		},
 	}
 }
 </script>
@@ -43,15 +47,16 @@ export default {
 
 p {
 	font-family: "monaco", monospace;
-	font-size: 20px;
+	color: darkgoldenrod;
+	font-size: 25px;
+	text-align: center;
 }
 
 .outer-box {
 	border: goldenrod 4px solid;
 	display: flex;
-	flex-direction: column;
-	justify-content: flex-start;
-	align-items: flex-start;
+	justify-content: center;
+	align-items: center;
 	padding: 10px 10px;
 	margin: 30px 0;
 	background: bisque;

@@ -65,20 +65,20 @@
 <script>
 export default {
 	name: "Person",
-	created() {
-		this.curPerson = this.$root.$data.persons.find(person => person.id === parseInt(this.$route.params.personId));
-		console.log(this.$route.params.personId)
-		console.log(this.curPerson)
-	},
 	data() {
 		return {
 			inEditMode: false,
-			newName: this.curPerson.name,
-			newEmail: this.curPerson.email,
-			newAge: this.curPerson.age,
-			newGender: this.curPerson.gender,
-			newBio: this.curPerson.bio,
+			curPerson: {},
 		}
+	},
+	created() {
+		this.curPerson = this.$root.$data.persons.find(person => person.id === parseInt(this.$route.params.personId));
+
+		this.newName = this.curPerson.name;
+		this.newEmail = this.curPerson.email;
+		this.newAge = this.curPerson.age;
+		this.newGender = this.curPerson.gender;
+		this.newBio = this.curPerson.bio;
 	},
 	methods: {
 		showEditForm() {
@@ -93,6 +93,8 @@ export default {
 			this.curPerson.age = this.newAge;
 			this.curPerson.gender = this.newGender;
 			this.curPerson.bio = this.newBio;
+
+			this.inEditMode = false;
 		},
 		deletePerson() {
 			// let perId = curPerson.id;

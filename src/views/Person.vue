@@ -98,12 +98,27 @@ export default {
 		},
 		deletePerson() {
 			// let perId = curPerson.id;
-			// Remove Answers
-
-			// Remove Questions
-
+			// Go through questions
+			let questions = this.$root.$data.forumPosts;
+			for (let questionIndex = questions.length - 1; questionIndex >= 0; questionIndex -= 1) {
+				if (questions[questionIndex].personId === this.curPerson.id) {
+					questions.splice(questionIndex, 1);
+				} else {
+					// Go through responses
+					let responses = questions[questionIndex].responses;
+					for (let responseIndex = responses.length - 1; responseIndex >= 0; responseIndex -= 1) {
+						if (responses[responseIndex].personId === this.curPerson.id) {
+							responses.splice(responseIndex, 1)
+						}
+					}
+				}
+			}
 			// Remove Person
+			let personIndex = this.$root.$data.persons.findIndex(person => person.id === this.curPerson.id)
+			this.$root.$data.persons.slice(personIndex, 1);
+			this.$router.back();
 		}
+
 	}
 }
 </script>

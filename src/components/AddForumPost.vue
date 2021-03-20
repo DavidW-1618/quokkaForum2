@@ -1,13 +1,29 @@
 <template>
 	<div class="outer-box">
-		<p>Add {{questionOrResponse}}</p>
-<!--		<div class="person">-->
-<!--			<img class="person-img" src="../../public/images/cartoon-quokka.png">-->
-<!--			<div class="personal-info">-->
-<!--				<h3>{{name}}</h3>-->
-<!--				<p>{{email}}</p>-->
-<!--			</div>-->
-<!--		</div>-->
+		<div v-if="clicked">
+			<div class="person">
+				<img class="person-img" src="../../public/images/cartoon-quokka.png">
+				<div class="personal-info">
+					<h3>{{name}}</h3>
+					<p>{{email}}</p>
+				</div>
+				<div class="control-buttons">
+					<div class="button">
+						<p class="button-text">Submit</p>
+					</div>
+					<div class="button" @click="hideAddForm">
+						<p class="button-text">Cancel</p>
+					</div>
+				</div>
+			</div>
+			<div class="dividing-line"></div>
+			<p class="comment">{{comment}}</p>
+		</div>
+		<div v-else>
+			<div class="click-box" v-on:click="showAddForm">
+				<p class="button-text">Add {{questionOrResponse}}</p>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -21,7 +37,8 @@ export default {
 		return {
 			name: "James Bond",
 			email: "007@MI6.gov",
-			comment: "Just go up to them and say hi. Try talking to them. Don't shoot them."
+			comment: "Just go up to them and say hi. Try talking to them. Don't shoot them.",
+			clicked: false,
 		}
 	},
 	computed: {
@@ -32,6 +49,14 @@ export default {
 				return "Response"
 			}
 		},
+	},
+	methods: {
+		showAddForm() {
+			this.clicked=true;
+		},
+		hideAddForm() {
+			this.clicked=false;
+		}
 	}
 }
 </script>
@@ -47,6 +72,10 @@ export default {
 
 p {
 	font-family: "monaco", monospace;
+	font-size: 20px;
+}
+
+.button-text {
 	color: darkgoldenrod;
 	font-size: 25px;
 	text-align: center;
@@ -61,6 +90,10 @@ p {
 	margin: 30px 0;
 	background: bisque;
 
+}
+.click-box {
+	height: 100%;
+	width: 100%;
 }
 .person {
 	/*border: 2px black solid;*/
@@ -80,6 +113,19 @@ p {
 	justify-content: center;
 	align-items: flex-start;
 	margin-left: 10px;
+}
+.control-buttons {
+	height: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	/*padding: 20px;*/
+	margin-left: auto;
+}
+.button{
+	border: goldenrod 4px solid;
+	margin: 20px 30px 20px 20px;
+	padding: 8px;
 }
 .dividing-line {
 	width: 96%;

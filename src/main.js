@@ -10,7 +10,8 @@ import mockPersons from '../mock-persons'
 let data = {
   forumPosts: mockForumPosts,
   persons: mockPersons,
-  nextId: 8,
+  nextPostId: 8,
+  nextPersonId: 10,
 }
 
 new Vue({

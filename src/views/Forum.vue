@@ -4,12 +4,12 @@
 		<hr/>
 		<div v-for="question in questions" :key="question.id">
 			<div class="question-wrapper">
-				<ForumPost :email="question.email" :comment="question.comment"></ForumPost>
+				<ForumPost :personId="question.personId" :comment="question.comment"></ForumPost>
 			</div>
 			<div>
 				<div v-for="response in question.responses" :key="response.id">
 					<div class="response-wrapper">
-						<ForumPost :email="response.email" :comment="response.comment"></ForumPost>
+						<ForumPost :personId="response.personId" :comment="response.comment"></ForumPost>
 					</div>
 				</div>
 				<div class="response-wrapper">

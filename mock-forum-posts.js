@@ -1,21 +1,21 @@
 let mockForumPosts = [
     {
-        email: "007@MI6.gov",
+        personId: 5,
         comment: "How do I add a friend?",
         id: 0,
         responses: [
             {
-                email: "lilly@pottermore.com",
+                personId: 6,
                 comment: "Just go up to them and say hi. Try talking to them. Don't shoot them.",
                 id: 1,
             },
             {
-                email: "tom.riddle@gmail.com",
+                personId: 4,
                 comment: "You have none.",
                 id: 2,
             },
             {
-                email: "snape@gmail.com",
+                personId: 7,
                 comment: "If you had really studied then you would know. Your asignement included reading chapters" +
                     " 5, 6, and 7. It was only 237 pages! You should have had it done yesterday! Realy Bond! You are" +
                     " such a slacker! Just like your father! 50 points from MI6!",
@@ -24,22 +24,22 @@ let mockForumPosts = [
         ]
     },
     {
-        email: "arthur@pbskids.com",
+        personId: 0,
         comment: "How does one change their profile picture?",
         id: 4,
         responses: [
             {
-                email: "muffy@pbskids.com",
+                personId: 3,
                 comment: "Just hire someone to do it for you!",
                 id: 5,
             },
             {
-                email: "buster@pbskids.com",
+                personId: 2,
                 comment: "Just click on the picture and the option will come up.",
                 id: 6,
             },
             {
-                email: "brian@pbskids.com",
+                personId: 1,
                 comment: "That's actually not possible. You're stuck with the quokka.",
                 id: 7,
             },

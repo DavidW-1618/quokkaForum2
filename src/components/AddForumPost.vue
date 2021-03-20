@@ -5,8 +5,8 @@
 				<div class="person">
 					<img class="person-img" src="../../public/images/cartoon-quokka.png">
 					<div class="personal-info">
-						<input type="text" v-model="this.nameIn">
-						<input type="email" v-model="this.emailIn">
+						<input type="text" v-model="nameIn">
+						<input type="email" v-model="emailIn">
 					</div>
 					<div class="control-buttons">
 						<div class="button">
@@ -18,7 +18,7 @@
 					</div>
 				</div>
 				<div class="dividing-line"></div>
-				<textarea class="comment" v-model="this.commentIn"></textarea>
+				<textarea class="comment" v-model="commentIn"></textarea>
 			</form>
 		</div>
 		<div v-else class="click-box" v-on:click="showAddForm">
@@ -64,23 +64,28 @@ export default {
 			this.clicked=false;
 		},
 		addComment() {
+			// debugger
+			//Do wee need to add a new person?
 			let curPerson = this.$root.$data.persons.find(person => person.email === this.emailIn);
 			if (curPerson == undefined) {
+				// Yup. Add a new person.
 				curPerson = {
 					name: this.nameIn,
 					email: this.emailIn,
 					bio: "",
 					age: "0",
 					gender: "Unknown",
+					id: this.$root.$data.nextPersonId,
 				};
+				this.$root.$data.nextPersonId += 1;
 				this.$root.$data.persons.push(curPerson);
 			}
 			let newPost = {
-				id: this.$root.$data.nextId,
-				email: this.emailIn,
+				id: this.$root.$data.nextPostId,
+				personId: curPerson.id,
 				comment: this.commentIn,
 			};
-			this.$root.$data.nextId += 1;
+			this.$root.$data.nextPostId += 1;
 			if (this.questionId === -1) {
 				newPost.responses = [];
 				this.$root.$data.forumPosts.push(newPost);

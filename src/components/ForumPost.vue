@@ -1,10 +1,12 @@
 <template>
 	<div class="outer-box">
 		<div class="person">
-			<img class="person-img" src="../../public/images/cartoon-quokka.png">
+			<router-link :to="'/person/' + person.id">
+				<img class="person-img" src="../../public/images/cartoon-quokka.png">
+			</router-link>
 			<div class="personal-info">
-				<h3>{{name}}</h3>
-				<p>{{email}}</p>
+				<h3>{{person.name}}</h3>
+				<p>{{person.email}}</p>
 			</div>
 		</div>
 		<div class="dividing-line"></div>
@@ -16,13 +18,13 @@
 export default {
 	name: "ForumPost",
 	props: {
-		email: String,
+		personId: Number,
 		comment: String,
 	},
 	computed: {
-		name() {
-			let person = this.$root.$data.persons.find(person => person.email === this.email)
-			return person.name
+		person() {
+			let person = this.$root.$data.persons.find(person => person.id === this.personId)
+			return person
 		}
 	},
 	data() {

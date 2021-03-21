@@ -80,7 +80,39 @@ let mockPersons = [
         gender: 'Male',
         bio: "My last name is very memorable!",
         id: 9,
-    }
+    },
+    {
+        name: "Captain America",
+        email: "Just talk to me in person.",
+        age: 22,
+        gender: 'Male',
+        bio: "I've punched Adolf Hitler in the face over a 100 times.",
+        id: 1001,
+    },
+    {
+        name: "Phineas",
+        email: "phineas@perspective.geo",
+        age: 12,
+        gender: 'Male',
+        bio: "I know what we're gonna do today!",
+        id: 1002,
+    },
+    {
+        name: "Ferb",
+        email: "ferb@perspective.geo",
+        age: 12,
+        gender: 'Male',
+        bio: "Well, Quokkas are marsupials.",
+        id: 1003,
+    },
+    {
+        name: "Isabella",
+        email: "isabella@perspective.geo",
+        age: 12,
+        gender: 'Female',
+        bio: "I'm a fireside girl!",
+        id: 1004,
+    },
 ]
 
 export default mockPersons;

@@ -31,7 +31,7 @@
 		<router-view/>
 		<div class="footer-container navbar-dark bg-dark">
 			<p>Creator: David Weber</p>
-			<p><a href="https://github.com/DavidW-1618/QuokkaChat">Source Code on GitHub</a></p>
+			<p><a href="https://github.com/DavidW-1618/quokkaForum2">Source Code on GitHub</a></p>
 		</div>
 	</div>
 </template>

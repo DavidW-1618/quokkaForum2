@@ -40,7 +40,7 @@
 			</div>
 
 			<!--  Move the buttons down below when the screen gets narrow enough.  -->
-			<div class="dividing-line"></div>
+			<div class="dividing-line small-display"></div>
 			<div class="full-space small-display">
 				<div v-if="inEditMode" class="control-buttons">
 					<div class="button">

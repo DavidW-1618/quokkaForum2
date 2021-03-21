@@ -43,6 +43,7 @@
 					<div class="input-row">
 						<p class="input-label">Bio:</p>
 						<textarea v-model="newBio" class="input-box"/>
+						<textarea v-model="newBio" class="input-box"/>
 					</div>
 				</form>
 				<div v-else class="personal-info">

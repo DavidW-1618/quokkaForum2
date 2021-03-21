@@ -1,6 +1,6 @@
 <template>
 	<div class="outer-box">
-		<div v-if="clicked" style="width: 100%">
+		<div v-if="clicked">
 			<form>
 				<div class="person">
 					<img class="person-img" src="../../public/images/cartoon-quokka.png">
@@ -8,7 +8,7 @@
 						<input type="text" v-model="nameIn">
 						<input type="email" v-model="emailIn">
 					</div>
-					<div class="control-buttons">
+					<div class="control-buttons large-display">
 						<div class="button">
 							<p class="button-text" @click="addComment()">Submit</p>
 						</div>
@@ -21,6 +21,15 @@
 				<textarea class="comment" v-model="commentIn"></textarea>
 				<p class="fine-print">If a registered email is used, the name will be replaced with the name on
 					record with the email.</p>
+				<div class="dividing-line small-display"></div>
+				<div class="control-buttons small-display">
+					<div class="button">
+						<p class="button-text" @click="addComment()">Submit</p>
+					</div>
+					<div class="button" @click="hideAddForm">
+						<p class="button-text">Cancel</p>
+					</div>
+				</div>
 			</form>
 		</div>
 		<div v-else class="click-box" v-on:click="showAddForm">
@@ -216,6 +225,111 @@ textarea {
 	font-family: Arial;
 	font-size: 15px;
 	margin: 0 10px 10px 12px;
+}
+
+@media only screen and (max-width: 1000px) {
+	.outer-box {
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+	.control-buttons {
+		margin: 20px;
+	}
+}
+
+@media only screen and (max-width: 800px) {
+	.outer-box {
+		align-items: center;
+	}
+	.large-display {
+		display: none;
+	}
+	.small-display {
+		display: block;
+	}
+	.control-buttons {
+		justify-content: center;
+	}
+	.button {
+		margin: 20px;
+	}
+	.person {
+		justify-content: center;
+	}
+	/* Fix margins making the top part of the box not centered. */
+	.person-img{
+		margin-left: 20px;
+	}
+	.personal-info {
+		margin-right: 30px;
+	}
+	.dividing-line, .comment, .fine-print {
+		width: 80%;
+	}
+}
+@media only screen and (max-width: 700px) {
+	.person {
+		flex-direction: column;
+		align-items: center;
+	}
+	.personal-info {
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	.person-img {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	form {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	.dividing-line {
+		width: 80%;
+	}
+	.comment, .fine-print {
+		margin-left: 20px;
+		margin-right: 20px;
+		text-align: center;
+	}
+}
+@media only screen and (max-width: 550px) {
+	input {
+		width: 90%;
+	}
+}
+@media only screen and (max-width: 500px) {
+	p {
+		text-align: center;
+	}
+	.person-img {
+		width: 100px;
+	}
+	.control-buttons {
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: center;
+	}
+}
+@media only screen and (max-width: 500px) {
+	input, textarea, .comment, .dividing-line, .fine-print {
+		width: 60%
+	}
+}
+
+@media only screen and (max-width:300px) {
+
+	.button {
+		margin: 10px;
+		padding: 5px;
+	}
+	.button-text {
+		font-size: 18px;
+	}
 }
 
 </style>

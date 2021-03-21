@@ -10,7 +10,7 @@ import mockPersons from '../mock-persons'
 let data = {
   forumPosts: mockForumPosts,
   persons: mockPersons,
-  nextPostId: 8,
+  nextPostId: 24,
   nextPersonId: 10,
 }
 

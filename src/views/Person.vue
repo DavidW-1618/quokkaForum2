@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="true-outer-box">
 		<div class="outer-box">
 			<div class="top-box">
 				<div class="left-box">
@@ -41,7 +41,7 @@
 					</div>
 					<div class="dividing-line"></div>
 					<div class="input-row">
-						<p class="input-label">Bio:</p>
+						<p class="input-label"><strong>Bio:</strong></p>
 						<textarea v-model="newBio" class="input-box"/>
 					</div>
 				</form>
@@ -53,7 +53,7 @@
 					<p>Age: {{ curPerson.age }}</p>
 					<p>Gender: {{ curPerson.gender }}</p>
 					<div class="dividing-line"></div>
-					<p>Bio: {{ curPerson.bio }}</p>
+					<p><strong>Bio:</strong> {{ curPerson.bio }}</p>
 				</div>
 			</div>
 			<!--		<div class="dividing-line"></div>-->
@@ -143,7 +143,11 @@ h1 {
 	margin-bottom: 10px;
 }
 
-
+.true-outer-box {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
 .outer-box {
 	margin: 50px auto;
 	/*margin-left: auto;*/
@@ -241,6 +245,47 @@ h1 {
 	/*margin: 20px 30px 20px 20px;*/
 	margin: 10px;
 	padding: 3px 7px;
+}
+
+@media only screen and (max-width: 1000px) {
+	.outer-box {
+		margin: 50px;
+	}
+}
+@media only screen and (max-width: 600px) {
+	.top-box {
+		flex-direction: column;
+		align-items: center;
+	}
+	.personal-info {
+		align-items: center;
+	}
+}
+@media only screen and (max-width: 500px) {
+	p {
+		text-align: center;
+	}
+	.top-box {
+		flex-direction: column;
+		align-items: center;
+	}
+	.person-img {
+		width: 100px;
+	}
+}
+@media only screen and (max-width:300px) {
+	.control-buttons {
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: center;
+	}
+	.button {
+		margin: 10px;
+		padding: 5px;
+	}
+	.button-text {
+		font-size: 18px;
+	}
 }
 
 </style>

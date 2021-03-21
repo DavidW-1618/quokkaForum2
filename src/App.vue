@@ -8,25 +8,22 @@
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="navbar-nav">
 					<li class="nav-item">
-						<a class="nav-link" href="/index.html">Home</a>
+						<a class="nav-link">Home</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/pages/about.html">FAQs</a>
+						<a class="nav-link">FAQs</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/pages/friends.html">Friends</a>
+						<a class="nav-link">Friends</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/pages/login.html">Login</a>
+						<a class="nav-link">Login</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/pages/trivia.html">Trivia</a>
+						<a class="nav-link">Trivia</a>
 					</li>
 					<li class="nav-item active">
 						<router-link to="/" class="nav-link">Forum</router-link>
-					</li>
-					<li class="nav-item">
-						<router-link to="/about" class="nav-link">Friends</router-link>
 					</li>
 				</ul>
 			</div>

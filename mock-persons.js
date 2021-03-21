@@ -46,7 +46,7 @@ let mockPersons = [
         email: "007@MI6.gov",
         age: 30,
         gender: 'Male',
-        bio: "Harry Potter! Come to die!",
+        bio: "I'm famous.",
         id: 5,
     },
     {

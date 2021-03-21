@@ -8,9 +8,40 @@
 				<div class="personal-info">
 					<router-link :to="'/person/' + person.id">
 						<h3>{{person.name}}</h3>
-						<p>{{person.email}}</p>
+						<p class="email">{{person.email}}</p>
 					</router-link>
 				</div>
+				<div class="large-display control-buttons-wrapper">
+					<div v-if="inEditMode" class="control-buttons">
+						<div class="button">
+							<p class="button-text" @click="submitPostEdit()">Save</p>
+						</div>
+						<div class="button" @click="hideEditForm()">
+							<p class="button-text">Cancel</p>
+						</div>
+					</div>
+					<div v-else class="control-buttons">
+						<div class="button">
+							<p class="button-text" @click="showEditForm()">Edit</p>
+						</div>
+						<div class="button" @click="deletePost()">
+							<p class="button-text">Delete</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="dividing-line"></div>
+			<div v-if="inEditMode" class="full-space">
+				<textarea class="comment" v-model="commentIn"></textarea>
+				<p class="fine-print">To edit the person details, please delete and/or make a new post.</p>
+			</div>
+			<div v-else>
+				<p class="comment">{{post.comment}}</p>
+			</div>
+
+			<!--  Move the buttons down below when the screen gets narrow enough.  -->
+			<div class="dividing-line"></div>
+			<div class="full-space small-display">
 				<div v-if="inEditMode" class="control-buttons">
 					<div class="button">
 						<p class="button-text" @click="submitPostEdit()">Save</p>
@@ -28,14 +59,6 @@
 					</div>
 				</div>
 			</div>
-			<div class="dividing-line"></div>
-			<div v-if="inEditMode" class="full-space">
-				<textarea class="comment" v-model="commentIn"></textarea>
-				<p class="fine-print">To edit the person details, please delete and/or make a new post.</p>
-			</div>
-			<div v-else>
-				<p class="comment">{{post.comment}}</p>
-			</div>
 		</div>
 	</div>
 </template>
@@ -45,12 +68,13 @@ export default {
 	name: "ForumPost",
 	props: {
 		post: Object,
+		isResponse: Boolean,
 	},
 	computed: {
 		person() {
 			let person = this.$root.$data.persons.find(person => person.id === this.post.personId)
 			return person
-		}
+		},
 	},
 	data() {
 		return {
@@ -136,6 +160,9 @@ textarea {
 	width: 100%;
 	height: 100%;
 }
+.small-display {
+	display: none;
+}
 
 .outer-box {
 	border: goldenrod 4px solid;
@@ -169,6 +196,11 @@ textarea {
 	margin-left: 10px;
 }
 
+.control-buttons-wrapper {
+	margin: 0;
+	padding: 0;
+	margin-left: auto;
+}
 .control-buttons {
 	height: 100%;
 	display: flex;
@@ -201,6 +233,99 @@ textarea {
 	font-family: Arial;
 	font-size: 15px;
 	margin: 0 10px 10px 12px;
+}
+
+
+@media only screen and (max-width: 1000px) {
+	/*.outer-box {*/
+	/*	margin-left: 50px;*/
+	/*	margin-right: 50px;*/
+	/*}*/
+}
+@media only screen and (max-width: 800px) {
+	.outer-box {
+		align-items: center;
+	}
+	.large-display {
+		display: none;
+	}
+	.small-display {
+		display: block;
+	}
+	.control-buttons {
+		justify-content: center;
+	}
+	.button {
+		margin: 20px;
+	}
+	.person {
+		justify-content: center;
+	}
+	/* Fix margins making the top part of the box not centered. */
+	.person-img{
+		margin-left: 20px;
+	}
+	.personal-info {
+		margin-right: 30px;
+	}
+
+}
+@media only screen and (max-width: 700px) {
+	.person {
+		flex-direction: column;
+		align-items: center;
+	}
+	.personal-info {
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	.person-img {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	.comment {
+		margin-left: 10px;
+		margin-right: 10px;
+		text-align: center;
+	}
+}
+/*@media only screen and (max-width: 600px) {*/
+
+/*	.personal-info {*/
+/*		align-items: center;*/
+/*	}*/
+/*}*/
+@media only screen and (max-width: 500px) {
+	p {
+		text-align: center;
+	}
+	.person-img {
+		width: 100px;
+	}
+	.control-buttons {
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: center;
+	}
+}
+@media only screen and (max-width:400px) {
+	.email {
+		display: none;
+	}
+}
+
+@media only screen and (max-width:300px) {
+
+	.button {
+		margin: 10px;
+		padding: 5px;
+	}
+	.button-text {
+		font-size: 18px;
+	}
 }
 
 </style>

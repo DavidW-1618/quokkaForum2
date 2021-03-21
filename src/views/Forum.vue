@@ -2,19 +2,19 @@
 	<div class="outer-box">
 		<h1>Forum</h1>
 		<hr/>
-		<div v-for="question in questions" :key="question.id">
+		<div v-for="question in questions" :key="question.id" :isResponse=false>
 			<div class="question-wrapper">
 				<ForumPost :post="question"></ForumPost>
 			</div>
 			<div>
-				<div v-for="response in question.responses" :key="response.id">
+				<div v-for="response in question.responses" :key="response.id" :isResponse=true>
 					<div class="response-wrapper">
 						<ForumPost :post="response"></ForumPost>
 					</div>
 				</div>
-				<div class="response-wrapper">
-					<AddForumPost :questionId="question.id"></AddForumPost>
-				</div>
+					<div class="response-wrapper">
+						<AddForumPost :questionId="question.id"></AddForumPost>
+					</div>
 			</div>
 		</div>
 		<div class="question-wrapper">
@@ -70,10 +70,39 @@ hr {
 .question-wrapper {
 	/*border: green 2px solid;*/
 	margin-right: 110px;
+	padding: 0;
 }
 
 .response-wrapper {
 	/*border: cyan 2px solid;*/
 	margin-left: 110px;
+	padding: 0;
 }
+
+@media only screen and (max-width: 1000px) {
+	.outer-box {
+		margin-left: 50px;
+		margin-right: 50px;
+	}
+}
+@media only screen and (max-width:470px) {
+	.outer-box {
+		margin-left: 20px;
+		margin-right: 20px;
+	}
+	.response-wrapper {
+		margin: 0;
+		padding: 0;
+		background: bisque;
+		border-right: bisque 20px solid;
+		border-left: bisque 20px solid;
+	}
+	.question-wrapper {
+		margin: 30px 0;
+		background: goldenrod;
+		border-right: goldenrod 20px solid;
+		border-left: goldenrod 20px solid;
+	}
+}
+
 </style>

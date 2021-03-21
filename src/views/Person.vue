@@ -41,7 +41,7 @@
 					</div>
 					<div class="dividing-line"></div>
 					<div class="input-row">
-						<p class="input-label"><strong>Bio:</strong></p>
+						<p class="input-label">Bio:</p>
 						<textarea v-model="newBio" class="input-box"/>
 					</div>
 				</form>
@@ -49,9 +49,9 @@
 					<h1>{{ curPerson.name }}</h1>
 					<div class="dividing-line"></div>
 					<!--					<p>Name: <strong>{{curPerson.name}}</strong></p>-->
-					<p>Email: {{ curPerson.email }}</p>
-					<p>Age: {{ curPerson.age }}</p>
-					<p>Gender: {{ curPerson.gender }}</p>
+					<p><strong>Email:</strong> {{ curPerson.email }}</p>
+					<p><strong>Age:</strong> {{ curPerson.age }}</p>
+					<p><strong>Gender:</strong> {{ curPerson.gender }}</p>
 					<div class="dividing-line"></div>
 					<p><strong>Bio:</strong> {{ curPerson.bio }}</p>
 				</div>

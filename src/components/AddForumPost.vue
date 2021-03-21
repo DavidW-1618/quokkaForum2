@@ -19,6 +19,8 @@
 				</div>
 				<div class="dividing-line"></div>
 				<textarea class="comment" v-model="commentIn"></textarea>
+				<p class="fine-print">If a registered email is used, the name will be replaced with the name on
+					record with the email.</p>
 			</form>
 		</div>
 		<div v-else class="click-box" v-on:click="showAddForm">
@@ -129,10 +131,23 @@ form {
 }
 input {
 	margin: 10px;
+
+	font-family: "monaco", monospace;
+	font-size: 20px;
+	background: papayawhip;
+	border: goldenrod 2px solid;
+	padding: 3px 7px;
 }
 textarea {
 	margin: 10px;
+	margin-bottom: 0;
 	width: 96%;
+
+	font-family: "monaco", monospace;
+	font-size: 20px;
+	background: papayawhip;
+	border: goldenrod 2px solid;
+	padding: 3px 7px;
 }
 
 .button-text {
@@ -196,6 +211,11 @@ textarea {
 }
 .comment {
 	padding: 5px 15px;
+}
+.fine-print {
+	font-family: Arial;
+	font-size: 15px;
+	margin: 0 10px 10px 12px;
 }
 
 </style>

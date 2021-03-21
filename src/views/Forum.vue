@@ -4,12 +4,12 @@
 		<hr/>
 		<div v-for="question in questions" :key="question.id">
 			<div class="question-wrapper">
-				<ForumPost :personId="question.personId" :comment="question.comment" :postId="question.id"></ForumPost>
+				<ForumPost :post="question"></ForumPost>
 			</div>
 			<div>
 				<div v-for="response in question.responses" :key="response.id">
 					<div class="response-wrapper">
-						<ForumPost :personId="response.personId" :comment="response.comment" :postId="response.id"></ForumPost>
+						<ForumPost :post="response"></ForumPost>
 					</div>
 				</div>
 				<div class="response-wrapper">
@@ -27,6 +27,7 @@
 
 import ForumPost from "../components/ForumPost.vue";
 import AddForumPost from "@/components/AddForumPost";
+
 export default {
 	name: "Forum",
 	components: {AddForumPost, ForumPost},
@@ -37,7 +38,6 @@ export default {
 	},
 }
 </script>
-
 
 
 <style scoped>
@@ -66,10 +66,12 @@ hr {
 	margin-right: auto;
 	max-width: 900px;
 }
+
 .question-wrapper {
 	/*border: green 2px solid;*/
 	margin-right: 110px;
 }
+
 .response-wrapper {
 	/*border: cyan 2px solid;*/
 	margin-left: 110px;

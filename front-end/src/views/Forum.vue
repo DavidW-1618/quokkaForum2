@@ -28,13 +28,34 @@
 import ForumPost from "../components/ForumPost.vue";
 import AddForumPost from "@/components/AddForumPost";
 
+import axios from 'axios'
+
 export default {
 	name: "Forum",
 	components: {AddForumPost, ForumPost},
 	data() {
 		return {
-			questions: this.$root.$data.forumPosts
+			questions: this.$root.$data.forumPosts,
+			// questions: [],
 		}
+	},
+	methods: {
+		async getPosts() {
+			try {
+				console.log("getting posts")
+				let response = await axios.get("http://localhost:3000/api/forumPosts");
+				console.log("got posts")
+				debugger
+				this.$root.$data.forumPosts = response.data;
+				console.log("saved posts")
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	},
+	created() {
+		debugger
+		this.getPosts();
 	},
 }
 </script>

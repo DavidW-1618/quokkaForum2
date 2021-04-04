@@ -39,6 +39,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
 	name: "AddForumPost",
 	props: {
@@ -74,22 +76,47 @@ export default {
 		hideAddForm() {
 			this.clicked=false;
 		},
-		addComment() {
+		// async createPerson() {
+		// 	// Yup. Add a new person.
+		// 	let newPerson = {
+		// 		name: this.nameIn,
+		// 		email: this.emailIn,
+		// 		bio: "",
+		// 		age: "0",
+		// 		gender: "Unknown",
+		// 	};
+		// 	await axios.post('/api/persons/', newPerson);
+		// 	this.$root.$data.nextPersonId += 1;
+		// 	this.$root.$data.persons.push(curPerson);
+		// }
+		async addComment() {
 			// debugger
-			//Do wee need to add a new person?
+			//Do we need to add a new person?
 			let curPerson = this.$root.$data.persons.find(person => person.email === this.emailIn);
-			if (curPerson == undefined) {
+			if (curPerson === undefined) {
 				// Yup. Add a new person.
-				curPerson = {
-					name: this.nameIn,
-					email: this.emailIn,
-					bio: "",
-					age: "0",
-					gender: "Unknown",
-					id: this.$root.$data.nextPersonId,
-				};
-				this.$root.$data.nextPersonId += 1;
-				this.$root.$data.persons.push(curPerson);
+				// curPerson = {
+				// 	name: this.nameIn,
+				// 	email: this.emailIn,
+				// 	bio: "",
+				// 	age: "0",
+				// 	gender: "Unknown",
+				// };
+				debugger
+				try{
+					let responsePerson = await axios.post('/api/persons/',{
+						name: this.nameIn,
+						email: this.emailIn,
+						bio: "",
+						age: "0",
+						gender: "Unknown",
+					} );
+					// this.$root.$data.nextPersonId += 1;
+					// responsePerson.id = responsePerson._id
+					this.$root.$data.persons.push(responsePerson);
+				} catch(error) {
+					console.log(error)
+				}
 			}
 			let newPost = {
 				id: this.$root.$data.nextPostId,

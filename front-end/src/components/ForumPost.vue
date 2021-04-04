@@ -7,8 +7,8 @@
 				</router-link>
 				<div class="personal-info">
 					<router-link :to="'/person/' + person.id">
-						<h3>{{person.name}}</h3>
-						<p class="email">{{person.email}}</p>
+						<h3>{{ person.name }}</h3>
+						<p class="email">{{ person.email }}</p>
 					</router-link>
 				</div>
 				<div class="large-display control-buttons-wrapper">
@@ -36,7 +36,7 @@
 				<p class="fine-print">To edit the person details, please delete and/or make a new post.</p>
 			</div>
 			<div v-else>
-				<p class="comment">{{post.comment}}</p>
+				<p class="comment">{{ post.comment }}</p>
 			</div>
 
 			<!--  Move the buttons down below when the screen gets narrow enough.  -->
@@ -64,6 +64,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
 	name: "ForumPost",
 	props: {
@@ -89,25 +91,41 @@ export default {
 		hideEditForm() {
 			this.inEditMode = false;
 		},
-		deletePost() {
-			let questions = this.$root.$data.forumPosts;
-			for (let questionIndex = questions.length - 1; questionIndex >= 0; questionIndex -= 1) {
-				if (questions[questionIndex].id === this.post.id) {
-					questions.splice(questionIndex, 1);
-				} else {
-					// Go through responses
-					let responses = questions[questionIndex].responses;
-					for (let responseIndex = responses.length - 1; responseIndex >= 0; responseIndex -= 1) {
-						if (responses[responseIndex].id === this.post.id) {
-							responses.splice(responseIndex, 1)
+		async deletePost() {
+			try {
+				await axios.delete("/api/forum_posts/" + this.post.id);
+
+				// Delete the post from the vue object.
+				// Todo: swap for reloading everything.
+				let questions = this.$root.$data.forumPosts;
+				for (let questionIndex = questions.length - 1; questionIndex >= 0; questionIndex -= 1) {
+					if (questions[questionIndex].id === this.post.id) {
+						questions.splice(questionIndex, 1);
+					} else {
+						// Go through responses
+						let responses = questions[questionIndex].responses;
+						for (let responseIndex = responses.length - 1; responseIndex >= 0; responseIndex -= 1) {
+							if (responses[responseIndex].id === this.post.id) {
+								responses.splice(responseIndex, 1)
+							}
 						}
 					}
 				}
+
+			} catch (error) {
+				console.log(error);
 			}
 		},
-		submitPostEdit() {
-			this.post.comment = this.commentIn;
-
+		async submitPostEdit() {
+			// this.post.comment = this.commentIn;
+			try {
+				await axios.put("/api/forum_posts/" + this.post.id, {
+					comment: this.commentIn
+				});
+				this.post.comment = this.commentIn;
+			} catch (error) {
+				console.log(error);
+			}
 			this.hideEditForm()
 		}
 	}
@@ -134,6 +152,7 @@ p {
 	font-family: "monaco", monospace;
 	font-size: 20px;
 }
+
 h3 {
 	margin-bottom: 3px;
 }
@@ -141,9 +160,11 @@ h3 {
 form {
 	width: inherit;
 }
+
 input {
 	margin: 10px;
 }
+
 textarea {
 	margin: 10px;
 	margin-bottom: 0;
@@ -160,6 +181,7 @@ textarea {
 	width: 100%;
 	height: 100%;
 }
+
 .small-display {
 	display: none;
 }
@@ -175,18 +197,21 @@ textarea {
 	background: bisque;
 
 }
+
 .person {
 	/*border: 2px black solid;*/
 	width: 100%;
 	display: flex;
 	align-items: center;
 }
+
 .person-img {
 	width: 80px;
 	margin: 10px;
 	border: goldenrod 3px solid;
 	border-radius: 50%;
 }
+
 .personal-info {
 	/*border: 2px black solid;*/
 	display: flex;
@@ -201,6 +226,7 @@ textarea {
 	padding: 0;
 	margin-left: auto;
 }
+
 .control-buttons {
 	height: 100%;
 	display: flex;
@@ -209,11 +235,13 @@ textarea {
 	/*padding: 20px;*/
 	margin-left: auto;
 }
-.button{
+
+.button {
 	border: goldenrod 4px solid;
 	margin: 20px 30px 20px 10px;
 	padding: 8px;
 }
+
 .button-text {
 	color: darkgoldenrod;
 	font-size: 25px;
@@ -226,9 +254,11 @@ textarea {
 	height: 2px;
 	margin: 10px;
 }
+
 .comment {
 	padding: 5px 15px;
 }
+
 .fine-print {
 	font-family: Arial;
 	font-size: 15px;
@@ -242,39 +272,49 @@ textarea {
 	/*	margin-right: 50px;*/
 	/*}*/
 }
+
 @media only screen and (max-width: 800px) {
 	.outer-box {
 		align-items: center;
 	}
+
 	.large-display {
 		display: none;
 	}
+
 	.small-display {
 		display: block;
 	}
+
 	.control-buttons {
 		justify-content: center;
 	}
+
 	.button {
 		margin: 20px;
 	}
+
 	.person {
 		justify-content: center;
 	}
+
 	/* Fix margins making the top part of the box not centered. */
-	.person-img{
+	.person-img {
 		margin-left: 20px;
 	}
+
 	.personal-info {
 		margin-right: 30px;
 	}
 
 }
+
 @media only screen and (max-width: 700px) {
 	.person {
 		flex-direction: column;
 		align-items: center;
 	}
+
 	.personal-info {
 		justify-content: center;
 		align-items: center;
@@ -282,16 +322,19 @@ textarea {
 		margin-left: 10px;
 		margin-right: 10px;
 	}
+
 	.person-img {
 		margin-left: 10px;
 		margin-right: 10px;
 	}
+
 	.comment {
 		margin-left: 10px;
 		margin-right: 10px;
 		text-align: center;
 	}
 }
+
 /*@media only screen and (max-width: 600px) {*/
 
 /*	.personal-info {*/
@@ -302,27 +345,31 @@ textarea {
 	p {
 		text-align: center;
 	}
+
 	.person-img {
 		width: 100px;
 	}
+
 	.control-buttons {
 		flex-direction: column;
 		justify-content: flex-start;
 		align-items: center;
 	}
 }
-@media only screen and (max-width:400px) {
+
+@media only screen and (max-width: 400px) {
 	.email {
 		display: none;
 	}
 }
 
-@media only screen and (max-width:300px) {
+@media only screen and (max-width: 300px) {
 
 	.button {
 		margin: 10px;
 		padding: 5px;
 	}
+
 	.button-text {
 		font-size: 18px;
 	}

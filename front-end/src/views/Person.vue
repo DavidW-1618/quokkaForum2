@@ -6,7 +6,7 @@
 					<img class="person-img" src="../../public/images/cartoon-quokka.png">
 					<div v-if="inEditMode" class="control-buttons">
 						<div class="button">
-							<p class="button-text" @click="submitEdits()">Submit</p>
+							<p class="button-text" @click="editPerson()">Submit</p>
 						</div>
 						<div class="button">
 							<p class="button-text" @click="hideEditForm()">Cancel</p>
@@ -64,6 +64,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
 	name: "Person",
 	data() {
@@ -88,16 +90,29 @@ export default {
 		hideEditForm() {
 			this.inEditMode = false;
 		},
-		submitEdits() {
-			this.curPerson.name = this.newName;
-			this.curPerson.email = this.newEmail;
-			this.curPerson.age = this.newAge;
-			this.curPerson.gender = this.newGender;
-			this.curPerson.bio = this.newBio;
-
+		async editPerson() {
+			try {
+				// Send the update.
+				await axios.put('/api/persons/' + this.curPerson.id, {
+					name: this.curPerson.name,
+					email: this.curPerson.email,
+					age: this.curPerson.age,
+					gender: this.curPerson.gender,
+					bio: this.curPerson.bio,
+				});
+				// Assuming that works, show the update.
+				// Todo: swap for reloading person from db or just from the response.
+				this.curPerson.name = this.newName;
+				this.curPerson.email = this.newEmail;
+				this.curPerson.age = this.newAge;
+				this.curPerson.gender = this.newGender;
+				this.curPerson.bio = this.newBio;
+			} catch (error) {
+				console.log(error);
+			}
 			this.inEditMode = false;
 		},
-		deletePerson() {
+		oldDeletePerson() {
 			// let perId = curPerson.id;
 			// Go through questions
 			let questions = this.$root.$data.forumPosts;
@@ -118,8 +133,18 @@ export default {
 			let personIndex = this.$root.$data.persons.findIndex(person => person.id === this.curPerson.id)
 			this.$root.$data.persons.slice(personIndex, 1);
 			this.$router.back();
+		},
+		async deletePerson() {
+			try {
+				// Delete the person from the vue object
+				await axios.delete("/api/persons/" + this.curPerson.id);
+				// Delete the person from the vue object.
+				// Todo: swap for reloading everything.
+				self.oldDeletePerson();
+			} catch (error) {
+				console.log(error);
+			}
 		}
-
 	}
 }
 </script>
@@ -149,6 +174,7 @@ h1 {
 	justify-content: center;
 	align-items: center;
 }
+
 .outer-box {
 	margin: 50px auto;
 	/*margin-left: auto;*/
@@ -238,6 +264,7 @@ h1 {
 	justify-content: flex-start;
 	align-items: center;
 }
+
 .input-box {
 	font-family: "monaco", monospace;
 	font-size: 20px;
@@ -253,37 +280,45 @@ h1 {
 		margin: 50px;
 	}
 }
+
 @media only screen and (max-width: 600px) {
 	.top-box {
 		flex-direction: column;
 		align-items: center;
 	}
+
 	.personal-info {
 		align-items: center;
 	}
 }
+
 @media only screen and (max-width: 500px) {
 	p {
 		text-align: center;
 	}
+
 	.top-box {
 		flex-direction: column;
 		align-items: center;
 	}
+
 	.person-img {
 		width: 100px;
 	}
 }
-@media only screen and (max-width:300px) {
+
+@media only screen and (max-width: 300px) {
 	.control-buttons {
 		flex-direction: column;
 		justify-content: flex-start;
 		align-items: center;
 	}
+
 	.button {
 		margin: 10px;
 		padding: 5px;
 	}
+
 	.button-text {
 		font-size: 18px;
 	}

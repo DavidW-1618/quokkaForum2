@@ -187,30 +187,29 @@ app.get('/api/persons', async (req, res) => {
 app.post('/api/forum_posts', async (req, res) => {
     console.log("\n\n\n", "Received Create Forum Post", req.body, "\n\n\n")
     // Get Post that is being responded to.
-    let person
-    let responseToPost = null //TODO: Shouldn't be null. Also, look up by email.
-    if (req.body.responseToPostId == null) {
-        try {
-            responseToPost = await Project.findOne({_id: req.body.responseToPostId});
-            if (!responseToPost) {
-                res.send(404);
-                return;
-            }
-        } catch (error) {
-            console.log(error);
-            res.sendStatus(500);
-        }
-    }
-    // Make Post
-    const forumPost = new ForumPost({
-        personId: req.body.personId,
-        comment: req.body.comment,
-        timeOfPost: req.body.timeOfPost,
-        // isOriginalPost: req.body.isOriginalPost,
-        responseTo: responstToPost,
-    });
-    // Send Post to DB
     try {
+        let person = Person.findOne({email: req.body.email});
+        // Todo: Figure out how to tell if 404 came back.
+        if (!person) {
+            // Make this person.
+            let newPerson = new Person({
+                name: req.body.name,
+                email: req.body.email,
+                age: 0,
+                gender: "unknown",
+                bio: "This person prefers to keep an air of mystery about them.",
+            });
+            await newPerson.save();
+            person = newPerson;
+        }
+        // Make Post
+        const forumPost = new ForumPost({
+            personId: person._id
+            comment: req.body.comment,
+            timeOfPost: req.body.timeOfPost,
+            responseToPost: req.body.responstToPost,
+        });
+        // Send Post to DB
         await forumPost.save();
         res.send(forumPost);
     } catch (error) {
@@ -286,7 +285,6 @@ app.delete('/api/forum_posts/:postId/', async (req, res) => {
 
 
     // If so, delete all of it's responses.
-
     // Delete it.
 
 // Get List of Forum Posts

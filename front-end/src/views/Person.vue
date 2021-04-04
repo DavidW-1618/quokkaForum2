@@ -6,18 +6,18 @@
 					<img class="person-img" src="../../public/images/cartoon-quokka.png">
 					<div v-if="inEditMode" class="control-buttons">
 						<div class="button">
-							<p class="button-text" @click="editPerson()">Submit</p>
+							<p class="button-text" @click.prevent="editPerson()">Submit</p>
 						</div>
 						<div class="button">
-							<p class="button-text" @click="hideEditForm()">Cancel</p>
+							<p class="button-text" @click.prevent="hideEditForm()">Cancel</p>
 						</div>
 					</div>
 					<div v-else class="control-buttons">
 						<div class="button">
-							<p class="button-text" @click="showEditForm()">Edit</p>
+							<p class="button-text" @click.prevent="showEditForm()">Edit</p>
 						</div>
 						<div class="button">
-							<p class="button-text" @click="deletePerson()">Delete</p>
+							<p class="button-text" @click.prevent="deletePerson()">Delete</p>
 						</div>
 					</div>
 				</div>
@@ -42,7 +42,6 @@
 					<div class="dividing-line"></div>
 					<div class="input-row">
 						<p class="input-label">Bio:</p>
-						<textarea v-model="newBio" class="input-box"/>
 						<textarea v-model="newBio" class="input-box"/>
 					</div>
 				</form>
@@ -93,7 +92,7 @@ export default {
 		async editPerson() {
 			try {
 				// Send the update.
-				await axios.put('/api/persons/' + this.curPerson.id, {
+				await axios.put('http://localhost:3000/api/persons/' + this.curPerson.id, {
 					name: this.curPerson.name,
 					email: this.curPerson.email,
 					age: this.curPerson.age,

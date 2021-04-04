@@ -70,6 +70,11 @@ export default {
 		},
 	},
 	methods: {
+		async loadPosts() {
+			let response = axios.get('/api/forum_posts');
+			this.$root.$data.forumPosts = response.data;
+			return
+		},
 		showAddForm() {
 			this.clicked=true;
 		},
@@ -92,8 +97,10 @@ export default {
 		async addComment() {
 			// debugger
 			//Do we need to add a new person?
-			let curPerson = this.$root.$data.persons.find(person => person.email === this.emailIn);
-			if (curPerson === undefined) {
+			// let curPerson = this.$root.$data.persons.find(person => person.email === this.emailIn);
+			let curPerson = axios.get('/api/persons/byemail/' + this.emailIn)
+			// Todo: How do I know if this is a 404?
+			if (curPerson.status != 200) {
 				// Yup. Add a new person.
 				// curPerson = {
 				// 	name: this.nameIn,
@@ -116,26 +123,40 @@ export default {
 					this.$root.$data.persons.push(responsePerson);
 				} catch(error) {
 					console.log(error)
+					return;
 				}
 			}
+			// Make Post
 			let newPost = {
-				id: this.$root.$data.nextPostId,
+				// id: this.$root.$data.nextPostId,
 				personId: curPerson.id,
 				comment: this.commentIn,
 			};
-			this.$root.$data.nextPostId += 1;
+			// Send Post
+			// this.$root.$data.nextPostId += 1;
 			if (this.questionId === -1) {
-				newPost.responses = [];
-				this.$root.$data.forumPosts.push(newPost);
+				newPost.responseToPost = null
+				// newPost.responses = [];
+				// this.$root.$data.forumPosts.push(newPost);
 			} else {
-				let curQuestion = this.$root.$data.forumPosts.find(question => question.id === this.questionId);
-				if (curQuestion == undefined) {
-					console.log("ERROR: Tried to submit answer to nonexistent question.");
-					this.resetInput();
-					return;
-				}
-				curQuestion.responses.push(newPost)
+				newPost.responseToPost = this.questionId
+				// let curQuestion = this.$root.$data.forumPosts.find(question => question.id === this.questionId);
+				// if (curQuestion == undefined) {
+				// 	console.log("ERROR: Tried to submit answer to nonexistent question.");
+				// 	this.resetInput();
+				// 	return;
+				// }
+				// curQuestion.responses.push(newPost)
 			}
+			try{
+				await axios.post('/api/forum_posts', newPost)
+			} catch(error) {
+				console.log(error)
+				return;
+			}
+			//Reload posts
+			await this.loadPosts()
+
 			this.resetInput();
 			return;
 		},

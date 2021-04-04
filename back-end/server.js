@@ -103,6 +103,7 @@ app.post('/api/persons', async (req, res) => {
 
 // Update
 app.put('/api/persons/:personId', async (req, res) => {
+    console.log("\n\n\n", "Received Update Person", req.body, "\n\n\n")
     try {
         let person = await Person.findOne({_id:req.params.personId});
         if (!person) {
@@ -125,13 +126,15 @@ app.put('/api/persons/:personId', async (req, res) => {
 
 // Delete
 app.delete('/api/persons/:personId', async (req, res) => {
+    console.log("\n\n\n", "Received Delete Person", req.body, "\n\n\n")
     try {
         let person = await Person.findOne({_id:req.params.personId});
         if (!person) {
             res.send(404);
             return;
         }
-        //TODO: Delete all of the person's posts
+        //Delete all of the person's posts
+        await Person.deleteMany({personId: person._id})
 
         // Delete the person
         await person.delete();
@@ -144,6 +147,7 @@ app.delete('/api/persons/:personId', async (req, res) => {
 
 // Get Person
 app.get('/api/persons/:personId', async (req, res) => {
+    console.log("\n\n\n", "Received Get Person", req.body, "\n\n\n")
     try {
         let person = await Person.findOne({_id:req.params.personId});
         res.send(person);
@@ -153,9 +157,21 @@ app.get('/api/persons/:personId', async (req, res) => {
     }
 });
 
+// Get Person By Email
+app.get('/api/persons/byemail/:email', async (req, res) => {
+    console.log("\n\n\n", "Received Get Person ByEmail", req.body, "\n\n\n")
+    try {
+        let person = await Person.findOne({email:req.params.email});
+        res.send(person);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
 // Get List of Persons
 app.get('/api/persons', async (req, res) => {
-    console.log("Getting All Persons")
+    console.log("\n\n\n", "Received Get All Persons", req.body, "\n\n\n")
     try {
         let persons = await Person.find();
         res.send(persons);
@@ -169,8 +185,10 @@ app.get('/api/persons', async (req, res) => {
 
 // Create
 app.post('/api/forum_posts', async (req, res) => {
+    console.log("\n\n\n", "Received Create Forum Post", req.body, "\n\n\n")
     // Get Post that is being responded to.
-    let responseToPost = null
+    let person
+    let responseToPost = null //TODO: Shouldn't be null. Also, look up by email.
     if (req.body.responseToPostId == null) {
         try {
             responseToPost = await Project.findOne({_id: req.body.responseToPostId});
@@ -222,16 +240,58 @@ app.post('/api/forum_posts', async (req, res) => {
 //     }
 // });
 
+// Update
+app.put('/api/forum_posts', async (req, res) => {
+    console.log("\n\n\n", "Received Update Forum Post", req.body, "\n\n\n")
+    try {
+        // Get Post.
+        let post = Post.findOne({_id: req.body._id})
+        if (!post) {
+            res.send(404);
+            return;
+        }
+        // TODO: Make sure only the comment is being sent and edited.
+        post.comment = req.body.comment;
+        await post.save();
+        console.log("Post Update Saved.");
+        res.sendStatus(500)
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
+
 // Delete Post
-    // Is this a Question?
+app.delete('/api/forum_posts/:postId/', async (req, res) => {
+    try {
+        let post = await ForumPost.findOne({_id:req.params.postId});
+        if (!item) {
+            res.send(404);
+            return;
+        }
+        // Is this a Question?
+        if (post.responseToPost == null) {
+            // If so, delete all of it's responses.
+            await ForumPost.deleteMany({resonseToPost: post._id})
+        }
+        // Delete the post.
+        await post.delete()
+        res.sendStatus(200);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
+    }
+});
+
 
     // If so, delete all of it's responses.
 
     // Delete it.
 
-// Get List of Forum Ponsts
+// Get List of Forum Posts
 app.get('/api/forum_posts', async (req, res) => {
-    console.log("Getting Forum Posts")
+    console.log("\n\n\n", "Received Get All Forum Posts", req.body, "\n\n\n")
     try {
         let posts = await ForumPost.find();
         res.send(posts);

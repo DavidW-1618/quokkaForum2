@@ -4,12 +4,14 @@ import router from './router'
 
 Vue.config.productionTip = false
 
-import mockForumPosts from '../mock-forum-posts'
-import mockPersons from '../mock-persons'
+// import mockForumPosts from '../mock-forum-posts'  //SWAP
+// import mockPersons from '../mock-persons'
 
 let data = {
-  forumPosts: mockForumPosts,
-  persons: mockPersons,
+  // forumPosts: mockForumPosts,
+  // persons: mockPersons,
+  forumPosts: [], //SWAP
+  persons: [],
   nextPostId: 24,
   nextPersonId: 10,
 }

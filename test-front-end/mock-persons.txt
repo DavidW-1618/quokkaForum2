@@ -1,0 +1,98 @@
+[{
+    "name": "Arthur Reed",
+    "email": "arthur@pbskids.com",
+    "age": 12,
+    "gender": "Male",
+    "bio": "I'm a main character! Woohoo!"
+},
+{
+    "name": "Brian",
+    "email": "brian@pbskids.com",
+    "age": 12,
+    "gender": "Male",
+    "bio": "I'm Brian the Brain! I'm the smartest cartoon character in this show."
+},
+{
+    "name": "Buster Baxter",
+    "email": "buster@pbskids.com",
+    "age": 11,
+    "gender": "Male",
+    "bio": "I'm Arthur's best friend. I'm also a rabbit. My family contributes significantly to the overall diverstity of this show."
+},
+{
+    "name": "Muffy",
+    "email": "muffy@pbskids.com",
+    "age": 11,
+    "gender": "Female",
+    "bio": "I'm SUPER rich! One time I litterally sued the school bullies and forced them to let other children play on the jungle jym. Then I became friends with the most outspoken of the bullies."
+},
+{
+    "name": "Voldemort",
+    "email": "tom.riddle@gmail.com",
+    "age": 200,
+    "gender": "Male",
+    "bio": "Harry Potter! Come to die!"
+},
+{
+    "name": "James Bond",
+    "email": "007@MI6.gov",
+    "age": 30,
+    "gender": "Male",
+    "bio": "I'm famous."
+},
+{
+    "name": "Lilly Potter",
+    "email": "lilly@pottermore.com",
+    "age": 22,
+    "gender": "Female",
+    "bio": "I'm Harry Potter's mom."
+},
+{
+    "name": "Snape",
+    "email": "snape@gmail.com",
+    "age": 70,
+    "gender": "Male",
+    "bio": "It's just too complicated. I'm the best double agent of all time."
+},
+{
+    "name": "James Bond",
+    "email": "007@MI6.gov",
+    "age": 22,
+    "gender": "Male",
+    "bio": "I'm Harry Potter's dad."
+},
+{
+    "name": "Mike Showerhammer",
+    "email": "JohnBythewayReferenceMe@gmail.com",
+    "age": 23,
+    "gender": "Male",
+    "bio": "My last name is very memorable!"
+},
+{
+    "name": "Captain America",
+    "email": "Just talk to me in person.",
+    "age": 22,
+    "gender": "Male",
+    "bio": "I've punched Adolf Hitler in the face over a 100 times."
+},
+{
+    "name": "Phineas",
+    "email": "phineas@perspective.geo",
+    "age": 12,
+    "gender": "Male",
+    "bio": "I know what we're gonna do today!"
+},
+{
+    "name": "Ferb",
+    "email": "ferb@perspective.geo",
+    "age": 12,
+    "gender": "Male",
+    "bio": "Well, Quokkas are marsupials."
+},
+{
+    "name": "Isabella",
+    "email": "isabella@perspective.geo",
+    "age": 12,
+    "gender": "Female",
+    "bio": "I'm a fireside girl!"
+}]

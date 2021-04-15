@@ -1,6 +1,6 @@
 <template>
-	<div class="true-outer-box">
-		<div class="outer-box">
+	<div class="true-person-outer-box">
+		<div class="person-outer-box">
 			<div class="top-box">
 				<div class="left-box">
 					<img class="person-img" src="../../public/images/cartoon-quokka.png">
@@ -24,25 +24,25 @@
 				<form v-if="inEditMode" class="personal-info">
 					<div class="input-row">
 						<p class="input-label">Name:</p>
-						<input type="text" v-model="newName" class="input-box"/>
+						<input type="text" v-model="editedPerson.name" class="input-box"/>
 					</div>
 					<div class="dividing-line"></div>
 					<div class="input-row">
 						<p class="input-label">Email:</p>
-						<input type="email" v-model="newEmail" class="input-box"/>
+						<input type="email" v-model="editedPerson.email" class="input-box"/>
 					</div>
 					<div class="input-row">
 						<p class="input-label">Age:</p>
-						<input type="number" v-model="newAge" class="input-box"/>
+						<input type="number" v-model="editedPerson.age" class="input-box"/>
 					</div>
 					<div class="input-row">
 						<p class="input-label">Gender:</p>
-						<input type="text" v-model="newGender" class="input-box"/>
+						<input type="text" v-model="editedPerson.gender" class="input-box"/>
 					</div>
 					<div class="dividing-line"></div>
 					<div class="input-row">
 						<p class="input-label">Bio:</p>
-						<textarea v-model="newBio" class="input-box"/>
+						<textarea v-model="editedPerson.bio" class="input-box"/>
 					</div>
 				</form>
 				<div v-else class="personal-info">
@@ -71,16 +71,11 @@ export default {
 		return {
 			inEditMode: false,
 			curPerson: {},
+			editedPerson: {}
 		}
 	},
-	created() {
-		this.curPerson = this.$root.$data.persons.find(person => person.id === parseInt(this.$route.params.personId));
-
-		this.newName = this.curPerson.name;
-		this.newEmail = this.curPerson.email;
-		this.newAge = this.curPerson.age;
-		this.newGender = this.curPerson.gender;
-		this.newBio = this.curPerson.bio;
+	async created() {
+		await this.getPerson()
 	},
 	methods: {
 		showEditForm() {
@@ -89,57 +84,102 @@ export default {
 		hideEditForm() {
 			this.inEditMode = false;
 		},
+		async getPosts() {
+			try {
+				// console.log("getting posts")
+				let response = await axios.get("/api/forum_posts");
+				// console.log("got posts")
+				this.$root.$data.forumPosts = response.data[0];
+				// this.questions = response.data[0];
+				// console.log("saved posts")
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		async getPerson() {
+			console.log(this.$route.params.personId);
+			debugger
+			this.curPerson = await axios.get("/api/persons/" + this.$route.params.personId);
+			this.curPerson = this.curPerson.data;
+			//this.curPerson = this.$root.$data.persons.find(person => person._id === parseInt(this.$route.params.personId));
+			console.log("this.curPerson");
+			console.log(this.curPerson);
+			
+			this.newName = this.curPerson.name;
+			this.newEmail = this.curPerson.email;
+			this.newAge = this.curPerson.age;
+			this.newGender = this.curPerson.gender;
+			this.newBio = this.curPerson.bio;
+			
+			this.editedPerson = {
+				name: this.curPerson.name,
+				email: this.curPerson.email,
+				age: this.curPerson.age,
+				gender: this.curPerson.gender,
+				bio: this.curPerson.bio,
+			}
+		},
+		async getPersons() {
+			try {
+				// console.log("getting people")
+				let response = await axios.get("/api/persons");
+				// console.log("got people")
+				this.$root.$data.persons = response.data;
+				// console.log("saved people")
+			} catch (error) {
+				console.log(error);
+			}
+		},
 		async editPerson() {
 			try {
 				// Send the update.
-				await axios.put('http://localhost:3000/api/persons/' + this.curPerson.id, {
-					name: this.curPerson.name,
-					email: this.curPerson.email,
-					age: this.curPerson.age,
-					gender: this.curPerson.gender,
-					bio: this.curPerson.bio,
+				await axios.put('/api/persons/' + this.$route.params.personId, {
+					name: this.editedPerson.name,
+					email: this.editedPerson.email,
+					age: this.editedPerson.age,
+					gender: this.editedPerson.gender,
+					bio: this.editedPerson.bio,
 				});
-				// Assuming that works, show the update.
-				// Todo: swap for reloading person from db or just from the response.
-				this.curPerson.name = this.newName;
-				this.curPerson.email = this.newEmail;
-				this.curPerson.age = this.newAge;
-				this.curPerson.gender = this.newGender;
-				this.curPerson.bio = this.newBio;
+				// Get the updated person.
+				await this.getPerson()
 			} catch (error) {
 				console.log(error);
 			}
 			this.inEditMode = false;
 		},
-		oldDeletePerson() {
-			// let perId = curPerson.id;
-			// Go through questions
-			let questions = this.$root.$data.forumPosts;
-			for (let questionIndex = questions.length - 1; questionIndex >= 0; questionIndex -= 1) {
-				if (questions[questionIndex].personId === this.curPerson.id) {
-					questions.splice(questionIndex, 1);
-				} else {
-					// Go through responses
-					let responses = questions[questionIndex].responses;
-					for (let responseIndex = responses.length - 1; responseIndex >= 0; responseIndex -= 1) {
-						if (responses[responseIndex].personId === this.curPerson.id) {
-							responses.splice(responseIndex, 1)
-						}
-					}
-				}
-			}
-			// Remove Person
-			let personIndex = this.$root.$data.persons.findIndex(person => person.id === this.curPerson.id)
-			this.$root.$data.persons.slice(personIndex, 1);
-			this.$router.back();
-		},
+		// oldDeletePerson() {
+		// 	// let perId = curPerson.id;
+		// 	// Go through questions
+		// 	let questions = this.$root.$data.forumPosts;
+		// 	for (let questionIndex = questions.length - 1; questionIndex >= 0; questionIndex -= 1) {
+		// 		if (questions[questionIndex].personId === this.curPerson._id) {
+		// 			questions.splice(questionIndex, 1);
+		// 		} else {
+		// 			// Go through responses
+		// 			let responses = questions[questionIndex].responses;
+		// 			for (let responseIndex = responses.length - 1; responseIndex >= 0; responseIndex -= 1) {
+		// 				if (responses[responseIndex].personId === this.curPerson._id) {
+		// 					responses.splice(responseIndex, 1)
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// 	// Remove Person
+		// 	let personIndex = this.$root.$data.persons.findIndex(person => person._id === this.curPerson._id)
+		// 	this.$root.$data.persons.slice(personIndex, 1);
+		// 	this.$router.back();
+		// },
 		async deletePerson() {
 			try {
 				// Delete the person from the vue object
-				await axios.delete("/api/persons/" + this.curPerson.id);
+				await axios.delete("/api/persons/" + this.curPerson._id);
 				// Delete the person from the vue object.
 				// Todo: swap for reloading everything.
-				self.oldDeletePerson();
+				// this.oldDeletePerson();
+				await this.getPersons();
+				await this.getPosts();
+				this.$router.back()
+
 			} catch (error) {
 				console.log(error);
 			}
@@ -168,13 +208,13 @@ h1 {
 	margin-bottom: 10px;
 }
 
-.true-outer-box {
+.true-person-outer-box {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
-.outer-box {
+.person-outer-box {
 	margin: 50px auto;
 	/*margin-left: auto;*/
 	/*margin-right: auto;*/
@@ -275,7 +315,7 @@ h1 {
 }
 
 @media only screen and (max-width: 1000px) {
-	.outer-box {
+	.person-outer-box {
 		margin: 50px;
 	}
 }

@@ -1,24 +1,28 @@
 <template>
-	<div class="outer-box">
+	<div class="forum-outer-box">
 		<h1>Forum</h1>
 		<hr/>
-		<div v-for="question in questions" :key="question.id" :isResponse=false>
+		<div v-for="question in questions" :key="question._id" :isResponse=false>
 			<div class="question-wrapper">
 				<ForumPost :post="question"></ForumPost>
 			</div>
 			<div>
-				<div v-for="response in question.responses" :key="response.id" :isResponse=true>
+				<div v-for="response in question.responses" :key="response._id" :isResponse=true>
 					<div class="response-wrapper">
 						<ForumPost :post="response"></ForumPost>
 					</div>
 				</div>
+				<div>
 					<div class="response-wrapper">
-						<AddForumPost :questionId="question.id"></AddForumPost>
+						<AddForumPost :question_id=question._id></AddForumPost>
 					</div>
+				</div>
 			</div>
 		</div>
-		<div class="question-wrapper">
-			<AddForumPost :questionId="-1"></AddForumPost>
+		<div>
+			<div class="question-wrapper">
+				<AddForumPost :question_id="'-1'"></AddForumPost>
+			</div>
 		</div>
 	</div>
 </template>
@@ -35,28 +39,51 @@ export default {
 	components: {AddForumPost, ForumPost},
 	data() {
 		return {
-			questions: this.$root.$data.forumPosts,
-			// questions: [],
+			// questions: this.$root.$data.forumPosts,
+			// questions: [], // SWAP
+		}
+	},
+	computed: {
+		questions() {
+			console.log(this.$root.$data.forumPosts)
+			return this.$root.$data.forumPosts
 		}
 	},
 	methods: {
 		async getPosts() {
 			try {
-				console.log("getting posts")
-				let response = await axios.get("http://localhost:3000/api/forumPosts");
-				console.log("got posts")
-				debugger
-				this.$root.$data.forumPosts = response.data;
-				console.log("saved posts")
+				// console.log("getting posts")
+				let response = await axios.get("/api/forum_posts");
+				// console.log("got posts")
+				this.$root.$data.forumPosts = response.data[0];
+				// this.questions = response.data[0];
+				// console.log("saved posts")
 			} catch (error) {
 				console.log(error);
 			}
+		},
+		async getPersons() {
+			try {
+				// console.log("getting people")
+				let response = await axios.get("/api/persons");
+				// console.log("got people")
+				this.$root.$data.persons = response.data;
+				// console.log("saved people")
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		async myCreated() {
+			await this.getPersons();
+			await this.getPosts(); //SWAP
 		}
 	},
 	created() {
-		debugger
-		this.getPosts();
+		this.myCreated()
 	},
+	watch: {
+		// this.$root.$data.forumPosts
+	}
 }
 </script>
 
@@ -81,7 +108,7 @@ hr {
 	border-bottom: 4px goldenrod solid;
 }
 
-.outer-box {
+.forum-outer-box {
 	/*border: red 2px solid;*/
 	margin-left: auto;
 	margin-right: auto;
@@ -101,13 +128,13 @@ hr {
 }
 
 @media only screen and (max-width: 1000px) {
-	.outer-box {
+	.forum-outer-box {
 		margin-left: 50px;
 		margin-right: 50px;
 	}
 }
 @media only screen and (max-width:470px) {
-	.outer-box {
+	.forum-outer-box {
 		margin-left: 20px;
 		margin-right: 20px;
 	}

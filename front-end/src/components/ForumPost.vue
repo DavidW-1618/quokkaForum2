@@ -1,12 +1,12 @@
 <template>
 	<div>
-		<div class="outer-box">
+		<div class="post-outer-box">
 			<div class="person">
-				<router-link :to="'/person/' + person.id">
+				<router-link :to="'/person/' + person._id">
 					<img class="person-img" src="../../public/images/cartoon-quokka.png">
 				</router-link>
 				<div class="personal-info">
-					<router-link :to="'/person/' + person.id">
+					<router-link :to="'/person/' + person._id">
 						<h3>{{ person.name }}</h3>
 						<p class="email">{{ person.email }}</p>
 					</router-link>
@@ -14,17 +14,17 @@
 				<div class="large-display control-buttons-wrapper">
 					<div v-if="inEditMode" class="control-buttons">
 						<div class="button">
-							<p class="button-text" @click="submitPostEdit()">Save</p>
+							<p class="button-text" @click.prevent="submitPostEdit()">Save</p>
 						</div>
-						<div class="button" @click="hideEditForm()">
+						<div class="button" @click.prevent="hideEditForm()">
 							<p class="button-text">Cancel</p>
 						</div>
 					</div>
 					<div v-else class="control-buttons">
 						<div class="button">
-							<p class="button-text" @click="showEditForm()">Edit</p>
+							<p class="button-text" @click.prevent="showEditForm()">Edit</p>
 						</div>
-						<div class="button" @click="deletePost()">
+						<div class="button" @click.prevent="deletePost()">
 							<p class="button-text">Delete</p>
 						</div>
 					</div>
@@ -44,17 +44,17 @@
 			<div class="full-space small-display">
 				<div v-if="inEditMode" class="control-buttons">
 					<div class="button">
-						<p class="button-text" @click="submitPostEdit()">Save</p>
+						<p class="button-text" @click.prevent="submitPostEdit()">Save</p>
 					</div>
-					<div class="button" @click="hideEditForm()">
+					<div class="button" @click.prevent="hideEditForm()">
 						<p class="button-text">Cancel</p>
 					</div>
 				</div>
 				<div v-else class="control-buttons">
 					<div class="button">
-						<p class="button-text" @click="showEditForm()">Edit</p>
+						<p class="button-text" @click.prevent="showEditForm()">Edit</p>
 					</div>
-					<div class="button" @click="deletePost()">
+					<div class="button" @click.prevent="deletePost()">
 						<p class="button-text">Delete</p>
 					</div>
 				</div>
@@ -74,7 +74,10 @@ export default {
 	},
 	computed: {
 		person() {
-			let person = this.$root.$data.persons.find(person => person.id === this.post.personId)
+			// let person = this.$root.$data.persons.find(person => person.id === this.post.personId)
+			let person = this.post.Person
+			// console.log("this.post.Person:")
+			// console.log(person)
 			return person
 		},
 	},
@@ -91,35 +94,34 @@ export default {
 		hideEditForm() {
 			this.inEditMode = false;
 		},
+		async getPosts() {
+			try {
+				// console.log("getting posts")
+				let response = await axios.get("/api/forum_posts");
+				//response = response.data
+				// console.log("got posts")
+				this.$root.$data.forumPosts = response.data[0];
+				// this.questions = response.data[0];
+				// console.log("saved posts")
+			} catch (error) {
+				console.log(error);
+			}
+		},
 		async deletePost() {
 			try {
-				await axios.delete("/api/forum_posts/" + this.post.id);
-
-				// Delete the post from the vue object.
-				// Todo: swap for reloading everything.
-				let questions = this.$root.$data.forumPosts;
-				for (let questionIndex = questions.length - 1; questionIndex >= 0; questionIndex -= 1) {
-					if (questions[questionIndex].id === this.post.id) {
-						questions.splice(questionIndex, 1);
-					} else {
-						// Go through responses
-						let responses = questions[questionIndex].responses;
-						for (let responseIndex = responses.length - 1; responseIndex >= 0; responseIndex -= 1) {
-							if (responses[responseIndex].id === this.post.id) {
-								responses.splice(responseIndex, 1)
-							}
-						}
-					}
-				}
+				await axios.delete("/api/forum_posts/" + this.post._id);
+				// Reload remaining posts
+				await this.getPosts()
 
 			} catch (error) {
 				console.log(error);
 			}
 		},
 		async submitPostEdit() {
+			// console.log("In submitPostEdit")
 			// this.post.comment = this.commentIn;
 			try {
-				await axios.put("/api/forum_posts/" + this.post.id, {
+				await axios.put("/api/forum_posts/" + this.post._id, {
 					comment: this.commentIn
 				});
 				this.post.comment = this.commentIn;
@@ -186,7 +188,7 @@ textarea {
 	display: none;
 }
 
-.outer-box {
+.post-outer-box {
 	border: goldenrod 4px solid;
 	display: flex;
 	flex-direction: column;
@@ -267,14 +269,14 @@ textarea {
 
 
 @media only screen and (max-width: 1000px) {
-	/*.outer-box {*/
+	/*.post-outer-box {*/
 	/*	margin-left: 50px;*/
 	/*	margin-right: 50px;*/
 	/*}*/
 }
 
 @media only screen and (max-width: 800px) {
-	.outer-box {
+	.post-outer-box {
 		align-items: center;
 	}
 

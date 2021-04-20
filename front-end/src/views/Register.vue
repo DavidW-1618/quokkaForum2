@@ -3,25 +3,30 @@
 		<h1>Create Account</h1>
 		<div class="login-container-two">
 			<div class="login-box-two">
-				<!--        <div class="username-container login-detail">-->
-				<!--            <p>Username</p>-->
-				<!--            <input id="username-input"></input>-->
-				<!--        </div>-->
+				<div class="email-container login-detail">
+					<p>First Name</p>
+					<input v-model="firstName"/>
+				</div>
+				<div class="email-container login-detail">
+					<p>Last Name</p>
+					<input v-model="lastName"/>
+				</div>
 				<div class="email-container login-detail" id="email-container">
 					<p>Email</p>
-					<input id="email-input"/>
+					<input id="email-input"  v-model="username"/>
 				</div>
-				<div class="password-container login-detail password-container-two">
+				<div class="confirm-password-container login-detail"> <!-- password-container-two"> -->
 					<p>Password</p>
-					<input id="password-input"/>
+					<input id="password-input" v-model="password"/>
 				</div>
-				<div class="confirm-password-container login-detail">
-					<p>Confirm</p>
-					<input id="confirm-password-input"/>
-				</div>
+<!--				<div class="confirm-password-container login-detail">-->
+<!--					<p>Confirm</p>-->
+<!--					<input id="confirm-password-input"/>-->
+<!--				</div>-->
 
 			</div>
-			<button onclick="checkEmail()" id="account-submit-button">Submit</button>
+			<p v-if="error" class="error">{{error}}</p>
+			<button @click.prevent="register()" id="account-submit-button">Submit</button>
 			<!--    <input id="account-submit-button" type="submit" value="Submit"/>-->
 		</div>
 	</div>
@@ -29,8 +34,40 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-	name: "Register"
+	name: "Register",
+	data() {
+		return {
+			firstName: '',
+			lastName: '',
+			username: '',
+			password: '',
+			error: '',
+		}
+	},
+	methods: {
+		async register() {
+			this.error = '';
+			if (!this.firstName || !this.lastName || !this.username || !this.password) {
+				this.error = "Please fill all fields. :)";
+				return;
+			}
+			try {
+				let response = await axios.post('/api/users', {
+					firstName: this.firstName,
+					lastName: this.lastName,
+					username: this.username,
+					password: this.password,
+				});
+				this.$root.$data.user = response.data.user;
+			} catch (error) {
+				this.error = error.response.data.message;
+				this.$root.$data.user = null;
+			}
+		},
+	}
 }
 </script>
 
@@ -126,10 +163,8 @@ h1 {
 
 }
 
-.quokka-couple {
-	width: 295px;
-	margin: 10px 70px;
-	border: 2px solid black;
+.error {
+	color: red;
 }
 
 @media only screen and (max-width: 900px) {

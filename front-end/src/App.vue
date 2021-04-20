@@ -17,25 +17,53 @@
 						<a class="nav-link">Friends</a>
 					</li>
 					<li class="nav-item">
-						<router-link to="/login" class="nav-link">Login</router-link>
-					</li>
-					<li class="nav-item">
 						<a class="nav-link">Trivia</a>
 					</li>
 					<li class="nav-item">
 <!--						TODO: Figure out how to make the active class work. -->
 						<router-link to="/" class="nav-link">Forum</router-link>
 					</li>
+					<li v-if="this.$root.$data.user" class="nav-item" @click.prevent="logout()">
+						<router-link to="/login" class="nav-link" >Log Out</router-link>
+					</li>
+					<li v-else class="nav-item">
+						<router-link to="/login" class="nav-link">Login</router-link>
+					</li>
 				</ul>
 			</div>
 		</div>
+<!--		<p v-if="this.$root.$data.user">{{this.$root.$data.user.firstName}}</p>-->
 		<router-view/>
 		<div class="footer-container navbar-dark bg-dark">
 			<p>Creator: David Weber</p>
 			<p><a href="https://github.com/DavidW-1618/quokkaForum2">Source Code on GitHub</a></p>
+<!--			<a @click="logout">Logout</a>-->
 		</div>
 	</div>
 </template>
+
+<script>
+import axios from "axios";
+
+export default {
+	methods: {
+		async logout() {
+			console.log("logout()")
+			try {
+				await axios.delete("/api/users");
+				this.$root.$data.user = null;
+				console.log("Here 1")
+			} catch (error) {
+				this.$root.$data.user = null;
+				console.log("Here 2")
+			}
+			location.reload()
+			// Todo: Why do I have to have this line? Why does the v-if not reset on it's own.
+			// Why does "Log out" not automatically switch to "login"?
+		},
+	}
+}
+</script>
 
 <style>
 /*@import "https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"*/

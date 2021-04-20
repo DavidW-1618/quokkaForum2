@@ -6,26 +6,57 @@
 				<div class="login-box">
 					<div class="username-container">
 						<p>Email</p>
-						<input id="username-input"/>
+						<input id="username-input" v-model="usernameLogin" />
 					</div>
 					<div class="password-container">
 						<p>Password</p>
-						<input id="password-input"/>
+						<input id="password-input" v-model="passwordLogin" />
 					</div>
 				</div>
 				<div class="create-account-option">
 					<router-link to="/register" id="createAccount">Become a Quokka!</router-link>
+					<button type="submit" class="pure-button pure-button-primary" @click.prevent="login">Login</button>
+					<!-- Todo: Move this! -->
 				</div>
 			</div>
 			<img class="quokka-couple" src="/images/quokka-couple.jpg">
 <!--			TODO: Make sure this picture keeps working. -->
 		</div>
+		<p v-if="errorLogin" class="error">{{errorLogin}}</p>
+		<!-- Todo: Move this! -->
 	</div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-	name: "Login"
+	name: "Login",
+	data() {
+		return {
+			usernameLogin: '',
+			passwordLogin: '',
+			errorLogin: '',
+		}
+	},
+	methods: {
+		async login() {
+			this.errorLogin = '';
+			if (!this.usernameLogin || !this.passwordLogin)
+				return;
+			try {
+				let response = await axios.post('/api/users/login', {
+					username: this.usernameLogin,
+					password: this.passwordLogin,
+				});
+				this.$root.$data.user = response.data.user;
+				this.$router.push({name: 'Forum'})
+			} catch (error) {
+				this.errorLogin = "Error: " + error.response.data.message;
+				this.$root.$data.user = null;
+			}
+		},
+	}
 }
 </script>
 

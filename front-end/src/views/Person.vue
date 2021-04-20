@@ -4,20 +4,22 @@
 			<div class="top-box">
 				<div class="left-box">
 					<img class="person-img" src="../../public/images/cartoon-quokka.png">
-					<div v-if="inEditMode" class="control-buttons">
-						<div class="button">
-							<p class="button-text" @click.prevent="editPerson()">Submit</p>
+					<div v-if="allowedToEdit">
+						<div v-if="inEditMode" class="control-buttons">
+							<div class="button">
+								<p class="button-text" @click.prevent="editPerson()">Submit</p>
+							</div>
+							<div class="button">
+								<p class="button-text" @click.prevent="hideEditForm()">Cancel</p>
+							</div>
 						</div>
-						<div class="button">
-							<p class="button-text" @click.prevent="hideEditForm()">Cancel</p>
-						</div>
-					</div>
-					<div v-else class="control-buttons">
-						<div class="button">
-							<p class="button-text" @click.prevent="showEditForm()">Edit</p>
-						</div>
-						<div class="button">
-							<p class="button-text" @click.prevent="deletePerson()">Delete</p>
+						<div v-else class="control-buttons">
+							<div class="button">
+								<p class="button-text" @click.prevent="showEditForm()">Edit</p>
+							</div>
+							<div class="button">
+								<p class="button-text" @click.prevent="deletePerson()">Delete</p>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -77,6 +79,17 @@ export default {
 	async created() {
 		await this.getPerson()
 	},
+	computed: {
+		allowedToEdit() {
+			if (!this.$root.$data.user) {
+				return false;
+			}
+			if (!this.$root.$data.user != this.person) {
+				return false;
+			}
+			return true;
+		},
+	},
 	methods: {
 		showEditForm() {
 			this.inEditMode = true;
@@ -97,8 +110,8 @@ export default {
 			}
 		},
 		async getPerson() {
-			console.log(this.$route.params.personId);
-			debugger
+			// console.log(this.$route.params.personId);
+			// debugger
 			this.curPerson = await axios.get("/api/persons/" + this.$route.params.personId);
 			this.curPerson = this.curPerson.data;
 			//this.curPerson = this.$root.$data.persons.find(person => person._id === parseInt(this.$route.params.personId));
@@ -147,28 +160,6 @@ export default {
 			}
 			this.inEditMode = false;
 		},
-		// oldDeletePerson() {
-		// 	// let perId = curPerson.id;
-		// 	// Go through questions
-		// 	let questions = this.$root.$data.forumPosts;
-		// 	for (let questionIndex = questions.length - 1; questionIndex >= 0; questionIndex -= 1) {
-		// 		if (questions[questionIndex].personId === this.curPerson._id) {
-		// 			questions.splice(questionIndex, 1);
-		// 		} else {
-		// 			// Go through responses
-		// 			let responses = questions[questionIndex].responses;
-		// 			for (let responseIndex = responses.length - 1; responseIndex >= 0; responseIndex -= 1) {
-		// 				if (responses[responseIndex].personId === this.curPerson._id) {
-		// 					responses.splice(responseIndex, 1)
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// 	// Remove Person
-		// 	let personIndex = this.$root.$data.persons.findIndex(person => person._id === this.curPerson._id)
-		// 	this.$root.$data.persons.slice(personIndex, 1);
-		// 	this.$router.back();
-		// },
 		async deletePerson() {
 			try {
 				// Delete the person from the vue object

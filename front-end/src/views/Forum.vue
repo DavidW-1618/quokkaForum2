@@ -12,14 +12,14 @@
 						<ForumPost :post="response"></ForumPost>
 					</div>
 				</div>
-				<div>
+				<div v-if="$root.$data.user">
 					<div class="response-wrapper">
 						<AddForumPost :question_id=question._id></AddForumPost>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div>
+		<div v-if="$root.$data.user">
 			<div class="question-wrapper">
 				<AddForumPost :question_id="'-1'"></AddForumPost>
 			</div>

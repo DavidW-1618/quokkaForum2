@@ -11,7 +11,7 @@
 						<p class="email">{{ person.email }}</p>
 					</router-link>
 				</div>
-				<div class="large-display control-buttons-wrapper">
+				<div v-if="allowedToEdit" class="large-display control-buttons-wrapper">
 					<div v-if="inEditMode" class="control-buttons">
 						<div class="button">
 							<p class="button-text" @click.prevent="submitPostEdit()">Save</p>
@@ -41,7 +41,7 @@
 
 			<!--  Move the buttons down below when the screen gets narrow enough.  -->
 			<div class="dividing-line small-display"></div>
-			<div class="full-space small-display">
+			<div v-if="allowedToEdit" class="full-space small-display">
 				<div v-if="inEditMode" class="control-buttons">
 					<div class="button">
 						<p class="button-text" @click.prevent="submitPostEdit()">Save</p>
@@ -79,6 +79,15 @@ export default {
 			// console.log("this.post.Person:")
 			// console.log(person)
 			return person
+		},
+		allowedToEdit() {
+			if (!this.$root.$data.user) {
+				return false;
+			}
+			if (!this.$root.$data.user != this.person) {
+				return false;
+			}
+			return true;
 		},
 	},
 	data() {

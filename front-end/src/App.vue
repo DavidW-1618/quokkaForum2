@@ -17,12 +17,13 @@
 						<a class="nav-link">Friends</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link">Login</a>
+						<router-link to="/login" class="nav-link">Login</router-link>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link">Trivia</a>
 					</li>
-					<li class="nav-item active">
+					<li class="nav-item">
+<!--						TODO: Figure out how to make the active class work. -->
 						<router-link to="/" class="nav-link">Forum</router-link>
 					</li>
 				</ul>

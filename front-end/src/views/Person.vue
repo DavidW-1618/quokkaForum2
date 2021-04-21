@@ -25,8 +25,12 @@
 				</div>
 				<form v-if="inEditMode" class="personal-info">
 					<div class="input-row">
-						<p class="input-label">Name:</p>
-						<input type="text" v-model="editedPerson.name" class="input-box"/>
+						<p class="input-label">First Name:</p>
+						<input type="text" v-model="editedPerson.firstName" class="input-box"/>
+					</div>
+					<div class="input-row">
+						<p class="input-label">Last Name:</p>
+						<input type="text" v-model="editedPerson.lastName" class="input-box"/>
 					</div>
 					<div class="dividing-line"></div>
 					<div class="input-row">
@@ -48,9 +52,8 @@
 					</div>
 				</form>
 				<div v-else class="personal-info">
-					<h1>{{ curPerson.name }}</h1>
+					<h1>{{ curPerson.firstName }} {{ curPerson.lastName }}</h1>
 					<div class="dividing-line"></div>
-					<!--					<p>Name: <strong>{{curPerson.name}}</strong></p>-->
 					<p><strong>Email:</strong> {{ curPerson.email }}</p>
 					<p><strong>Age:</strong> {{ curPerson.age }}</p>
 					<p><strong>Gender:</strong> {{ curPerson.gender }}</p>
@@ -61,6 +64,7 @@
 			<!--		<div class="dividing-line"></div>-->
 			<!--		<p class="comment">{{curPerson.bio}}</p>-->
 		</div>
+		<p class="error-msg">{{errorMsg}}</p>
 	</div>
 </template>
 
@@ -73,7 +77,8 @@ export default {
 		return {
 			inEditMode: false,
 			curPerson: {},
-			editedPerson: {}
+			editedPerson: {},
+			errorMsg: "",
 		}
 	},
 	async created() {
@@ -84,7 +89,7 @@ export default {
 			if (!this.$root.$data.user) {
 				return false;
 			}
-			if (!this.$root.$data.user != this.person) {
+			if (this.$root.$data.user._id != this.curPerson._id) {
 				return false;
 			}
 			return true;
@@ -118,14 +123,16 @@ export default {
 			console.log("this.curPerson");
 			console.log(this.curPerson);
 			
-			this.newName = this.curPerson.name;
-			this.newEmail = this.curPerson.email;
-			this.newAge = this.curPerson.age;
-			this.newGender = this.curPerson.gender;
-			this.newBio = this.curPerson.bio;
+			// this.newFirstName = this.curPerson.firstName;
+			// this.newLastName = this.curPerson.lastName;
+			// this.newEmail = this.curPerson.email;
+			// this.newAge = this.curPerson.age;
+			// this.newGender = this.curPerson.gender;
+			// this.newBio = this.curPerson.bio;
 			
 			this.editedPerson = {
-				name: this.curPerson.name,
+				firstName: this.curPerson.firstName,
+				lastName: this.curPerson.lastName,
 				email: this.curPerson.email,
 				age: this.curPerson.age,
 				gender: this.curPerson.gender,
@@ -147,26 +154,28 @@ export default {
 			try {
 				// Send the update.
 				await axios.put('/api/persons/' + this.$route.params.personId, {
-					name: this.editedPerson.name,
+					firstName: this.editedPerson.firstName,
+					lastName: this.editedPerson.lastName,
 					email: this.editedPerson.email,
 					age: this.editedPerson.age,
 					gender: this.editedPerson.gender,
 					bio: this.editedPerson.bio,
 				});
 				// Get the updated person.
-				await this.getPerson()
+				await this.getPerson();
+				this.errorMsg = "";
 			} catch (error) {
 				console.log(error);
+				await this.getPerson();
+				this.errorMsg = error + "\n This is likely due to using an email that already belongs to another user.";
 			}
 			this.inEditMode = false;
 		},
 		async deletePerson() {
 			try {
-				// Delete the person from the vue object
 				await axios.delete("/api/persons/" + this.curPerson._id);
-				// Delete the person from the vue object.
-				// Todo: swap for reloading everything.
-				// this.oldDeletePerson();
+				// Log Out the user.
+				this.$root.$data.user = null;
 				await this.getPersons();
 				await this.getPosts();
 				this.$router.back()
@@ -201,6 +210,7 @@ h1 {
 
 .true-person-outer-box {
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 }
@@ -303,6 +313,12 @@ h1 {
 	/*margin: 20px 30px 20px 20px;*/
 	margin: 10px;
 	padding: 3px 7px;
+}
+
+.error-msg {
+	color: red;
+	margin-bottom: 50px;
+	max-width: 600px;
 }
 
 @media only screen and (max-width: 1000px) {

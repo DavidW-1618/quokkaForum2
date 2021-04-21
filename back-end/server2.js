@@ -36,32 +36,33 @@ app.use(cookieSession({
 const users = require("./users.js");
 app.use("/api/users", users.routes);
 const validUser = users.valid;
+const Person = users.model
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Schemes and Models
-
-const personSchema = new mongoose.Schema({
-    name: String,
-    email: String,
-    age: Number,
-    gender: String,
-    bio: String,
-});
-personSchema.virtual('id')
-    .get(function() {
-        return this._id.toHexString();
-    });
-personSchema.set('toJSON', {
-    virtuals: true
-});
-const Person = mongoose.model('Person', personSchema);
-
-///////
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// //Schemes and Models
+//
+// const personSchema = new mongoose.Schema({
+//     name: String,
+//     email: String,
+//     age: Number,
+//     gender: String,
+//     bio: String,
+// });
+// personSchema.virtual('id')
+//     .get(function() {
+//         return this._id.toHexString();
+//     });
+// personSchema.set('toJSON', {
+//     virtuals: true
+// });
+// const Person = mongoose.model('Person', personSchema);
+//
+// ///////
 
 const forumPostSchema = new mongoose.Schema({
     Person: {
         type: mongoose.Schema.ObjectId,
-        ref: 'Person'
+        ref: 'User'
     },
     comment: String,
     timeOfPost: Date,
@@ -72,38 +73,48 @@ forumPostSchema.virtual('id')
     .get(function() {
         return this._id.toHexString();
     });
+
+// This is a method that will be called automatically any time we convert a user
+// object to JSON. It deletes the password hash from the object. This ensures
+// that we never send password hashes over our API, to avoid giving away
+// anything to an attacker.
+forumPostSchema.methods.toJSON = function() {
+    var obj = this.toObject();
+    delete obj.Person.password;
+    return obj;
+}
+
 forumPostSchema.set('toJSON', {
     virtuals: true
 });
 const ForumPost = mongoose.model('ForumPost', forumPostSchema);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Password Filters
+
+function personFindOne(filters) {
+    let result = Person.findOne(filters);
+    delete result.password;
+    return result;
+}
+async function postsFind() {
+    let results = await ForumPost.find().populate('Person').lean();
+    // results = results.toObject();
+    for (let i = 0; i < results.length; i++) {
+        let result = results[i];
+        delete result.Person.password;
+        results[i] = result;
+    }
+    return results;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Persons Routes
 
 const personRouter = express.Router();
 
-// Create
-personRouter.post('/', async (req, res) => {
-    console.log("\n\n\n", "Received Create Person", req.body, "\n\n\n")
-    const person = new Person({
-        name: req.body.name,
-        email: req.body.email,
-        age: req.body.age,
-        gender: req.body.gender,
-        bio: req.body.bio,
-    });
-    try {
-        await person.save();
-        res.send(person);
-        console.log("\n\n\n", person, "\n\n\n")
-    } catch (error) {
-        console.log(error);
-        res.sendStatus(500);
-    }
-});
-
 // Update
-personRouter.put('/:personId', async (req, res) => {
+personRouter.put('/:personId', validUser, async (req, res) => {
     console.log("\n\n\n", "Received Update Person", req.body, "\n\n\n")
     try {
         let person = await Person.findOne({_id:req.params.personId});
@@ -111,7 +122,19 @@ personRouter.put('/:personId', async (req, res) => {
             res.send(404);
             return;
         }
-        person.name = req.body.name;
+
+        // Check to see if email already exists and if so send a 403 error. A 403
+        // error means permission denied. // Make sure that the email was not unchanged though.
+        const existingUser = await Person.findOne({
+            email: req.body.email
+        });
+        if (existingUser && existingUser._id != req.params.personId)
+            return res.status(403).send({
+                message: "Email already exists for another user. Person not updated."
+            });
+
+        person.firstName = req.body.firstName;
+        person.lastName = req.body.lastName;
         person.email = req.body.email;
         person.age = req.body.age;
         person.gender = req.body.gender;
@@ -126,7 +149,7 @@ personRouter.put('/:personId', async (req, res) => {
 });
 
 // Delete
-personRouter.delete('/:personId', async (req, res) => {
+personRouter.delete('/:personId', validUser, async (req, res) => {
     console.log("\n\n\n", "Received Delete Person", req.body, "\n\n\n")
     try {
         let person = await Person.findOne({_id:req.params.personId});
@@ -171,6 +194,8 @@ personRouter.delete('/:personId', async (req, res) => {
 
         // Delete the person
         await person.delete();
+        // Remove login cookie thing.
+        req.session = null;
         res.sendStatus(200);
     } catch (error) {
         console.log(error);
@@ -190,17 +215,17 @@ personRouter.get('/:personId', async (req, res) => {
     }
 });
 
-// Get Person By Email
-personRouter.get('/byemail/:email', async (req, res) => {
-    console.log("\n\n\n", "Received Get Person ByEmail", req.body, "\n\n\n")
-    try {
-        let person = await Person.findOne({email:req.params.email});
-        res.send(person);
-    } catch (error) {
-        console.log(error);
-        res.sendStatus(500);
-    }
-});
+// // Get Person By Email
+// personRouter.get('/byemail/:email',  async (req, res) => {
+//     console.log("\n\n\n", "Received Get Person ByEmail", req.body, "\n\n\n")
+//     try {
+//         let person = await Person.findOne({email:req.params.email});
+//         res.send(person);
+//     } catch (error) {
+//         console.log(error);
+//         res.sendStatus(500);
+//     }
+// });
 
 // Get List of Persons
 personRouter.get('/', async (req, res) => {
@@ -220,25 +245,11 @@ personRouter.get('/', async (req, res) => {
 const forumPostRouter = express.Router();
 
 // Create
-forumPostRouter.post('/', async (req, res) => {
+forumPostRouter.post('/',validUser,  async (req, res) => {
     console.log("\n\n\n", "Received Create Forum Post", req.body, "\n\n\n")
     // Get Post that is being responded to.
     try {
-        console.log("--1: ", req.body.personId);
         let person = await Person.findOne({_id: req.body.personId});
-        console.log("--2")
-        // if (!person) {
-        //     // Make this person.
-        //     let newPerson = new Person({
-        //         name: req.body.name,
-        //         email: req.body.email,
-        //         age: 0,
-        //         gender: "unknown",
-        //         bio: "This person prefers to keep an air of mystery about them.",
-        //     });
-        //     await newPerson.save();
-        //     person = newPerson;
-        // }
         // Make Post
         console.log("Person found:")
         console.log(person)
@@ -258,7 +269,7 @@ forumPostRouter.post('/', async (req, res) => {
 });
 
 // Update
-forumPostRouter.put('/:id', async (req, res) => {
+forumPostRouter.put('/:id',validUser,  async (req, res) => {
     console.log("\n\n\n", "Received Update Forum Post", req.body, "\n\n\n")
     try {
         // Get Post.
@@ -279,7 +290,7 @@ forumPostRouter.put('/:id', async (req, res) => {
 
 
 // Delete Post
-forumPostRouter.delete('/:postId/', async (req, res) => {
+forumPostRouter.delete('/:postId/',validUser,  async (req, res) => {
     try {
         let post = await ForumPost.findOne({_id:req.params.postId});
         if (!post) {
@@ -309,7 +320,8 @@ forumPostRouter.get('/', async (req, res) => {
     let posts = null;
     // Get Posts
     try {
-        posts = await ForumPost.find().populate('Person');;
+        // posts = await ForumPost.find().populate('Person');
+        posts = await postsFind();
     } catch (error) {
         console.log(error);
         res.sendStatus(500);
@@ -327,7 +339,7 @@ forumPostRouter.get('/', async (req, res) => {
     for (let i = 0; i < questions.length; i++){
         // for (let q of questions) {
         //     q.responses = [];
-        questions[i] = questions[i].toObject()
+        // questions[i] = questions[i].toObject()
         let curAnswers = answers.filter(a => a.responseToPost == questions[i]._id);
         questions[i]["responses"] = curAnswers;
     }

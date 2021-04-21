@@ -52,10 +52,8 @@ export default {
 			try {
 				await axios.delete("/api/users");
 				this.$root.$data.user = null;
-				console.log("Here 1")
 			} catch (error) {
 				this.$root.$data.user = null;
-				console.log("Here 2")
 			}
 			location.reload()
 			// Todo: Why do I have to have this line? Why does the v-if not reset on it's own.

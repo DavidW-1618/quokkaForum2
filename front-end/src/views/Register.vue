@@ -4,20 +4,20 @@
 		<div class="login-container-two">
 			<div class="login-box-two">
 				<div class="email-container login-detail">
-					<p>First Name</p>
-					<input v-model="firstName"/>
+					<p class="input-label">First Name</p>
+					<input class="input-box" v-model="firstName"/>
 				</div>
 				<div class="email-container login-detail">
-					<p>Last Name</p>
-					<input v-model="lastName"/>
+					<p class="input-label">Last Name</p>
+					<input class="input-box" v-model="lastName"/>
 				</div>
 				<div class="email-container login-detail" id="email-container">
-					<p>Email</p>
-					<input id="email-input"  v-model="username"/>
+					<p class="input-label">Email</p>
+					<input class="input-box" id="email-input"  v-model="email"/>
 				</div>
 				<div class="confirm-password-container login-detail"> <!-- password-container-two"> -->
-					<p>Password</p>
-					<input id="password-input" v-model="password"/>
+					<p class="input-label">Password</p>
+					<input class="input-box" id="password-input" v-model="password"/>
 				</div>
 <!--				<div class="confirm-password-container login-detail">-->
 <!--					<p>Confirm</p>-->
@@ -42,7 +42,7 @@ export default {
 		return {
 			firstName: '',
 			lastName: '',
-			username: '',
+			email: '',
 			password: '',
 			error: '',
 		}
@@ -50,7 +50,7 @@ export default {
 	methods: {
 		async register() {
 			this.error = '';
-			if (!this.firstName || !this.lastName || !this.username || !this.password) {
+			if (!this.firstName || !this.lastName || !this.email || !this.password) {
 				this.error = "Please fill all fields. :)";
 				return;
 			}
@@ -58,10 +58,11 @@ export default {
 				let response = await axios.post('/api/users', {
 					firstName: this.firstName,
 					lastName: this.lastName,
-					username: this.username,
+					email: this.email,
 					password: this.password,
 				});
 				this.$root.$data.user = response.data.user;
+				this.$router.push({name: 'Forum'})
 			} catch (error) {
 				this.error = error.response.data.message;
 				this.$root.$data.user = null;
@@ -101,8 +102,10 @@ h1 {
 	display: flex;
 	/*padding: 20px;*/
 	margin: 60px 70px;
-	background-color: lightgrey;
-	border: 2px solid black;
+	/*background-color: lightgrey;*/
+	/*border: 2px solid black;*/
+	border: goldenrod 4px solid;
+	background: bisque;
 	margin-bottom: 0;
 }
 
@@ -111,13 +114,30 @@ h1 {
 	margin-bottom: 20px;
 }
 
+.input-box {
+	font-family: "monaco", monospace;
+	font-size: 20px;
+	background: papayawhip;
+	border: goldenrod 2px solid;
+	/*margin: 20px 30px 20px 20px;*/
+	margin: 10px;
+	padding: 3px 7px;
+	margin-left: 0;
+}
+
+.input-label {
+	font-size: 25px;
+}
+
 #account-submit-button {
-	/*background-color: bisque;*/
+	/*color: darkgoldenrod;*/
+	background-color: bisque;
+	border: goldenrod 4px solid;
 	/*margin: 12px;*/
 	text-align: center;
 	padding: 10px;
-
-	margin-bottom: 70px;
+	margin-top: 25px;
+	margin-bottom: 50px;
 }
 
 
@@ -128,12 +148,13 @@ h1 {
 	justify-content: center;
 }
 
-.username-container, .password-container-two, .email-container {
-	border-bottom: #132020 2px solid;
+.email-container, .password-container-two, .email-container {
+	/*border-bottom: #132020 2px solid;*/
+	border-bottom: goldenrod 4px solid;
 	width: 100%;
 }
 
-.username-container, .password-container, .login-detail {
+.email-container, .password-container, .login-detail {
 	/*border: 2px solid #00ffff;*/
 	display: flex;
 	justify-content: center;
@@ -141,7 +162,7 @@ h1 {
 	padding: 20px
 }
 
-.username-container > p, .password-container > p, .login-detail > p {
+.email-container > p, .password-container > p, .login-detail > p {
 	padding-right: 20px;
 	margin-bottom: 0;
 	padding-bottom: 0;
@@ -174,10 +195,23 @@ h1 {
 		justify-content: center;
 		align-items: center;
 	}
+}
 
-	.quokka-couple {
-		margin-top: 60px;
-		width: 330px;
+@media only screen and (max-width: 600px) {
+	.login-box-two {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	.login-detail {
+		padding: 10px;
+		margin: 0;
+	}
+	.username-container, .password-container {
+		margin: 0;
+		padding: 10px;
+	}
+	.input-box{
+		width: 175px
 	}
 }
 

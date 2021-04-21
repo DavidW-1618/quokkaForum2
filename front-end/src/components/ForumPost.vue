@@ -7,7 +7,7 @@
 				</router-link>
 				<div class="personal-info">
 					<router-link :to="'/person/' + person._id">
-						<h3>{{ person.name }}</h3>
+						<h3>{{ person.firstName }} {{person.lastName}}</h3>
 						<p class="email">{{ person.email }}</p>
 					</router-link>
 				</div>
@@ -84,7 +84,7 @@ export default {
 			if (!this.$root.$data.user) {
 				return false;
 			}
-			if (!this.$root.$data.user != this.person) {
+			if (this.$root.$data.user._id != this.post.Person._id) {
 				return false;
 			}
 			return true;

@@ -1,23 +1,24 @@
 <template>
-	<div>
+	<div class="login-body-box">
 		<h1>Login</h1>
 		<div class="login-container">
 			<div class="login-outer-box">
-				<div class="login-box">
-					<div class="username-container">
-						<p>Email</p>
-						<input id="username-input" v-model="usernameLogin" />
+					<div class="login-box">
+						<div class="username-container">
+							<p class="input-label">Email</p>
+							<input class="input-box" id="username-input" v-model="emailLogin" />
+						</div>
+						<div class="password-container">
+							<p class="input-label">Password</p>
+							<input class="input-box" id="password-input" v-model="passwordLogin" />
+						</div>
 					</div>
-					<div class="password-container">
-						<p>Password</p>
-						<input id="password-input" v-model="passwordLogin" />
+					<div class="create-account-option">
+						<router-link class="login-box-buttons" to="/register">Become a
+							Quokka!</router-link>
+						<p class="login-box-buttons" @click.prevent="login()">Login</p>
 					</div>
-				</div>
-				<div class="create-account-option">
-					<router-link to="/register" id="createAccount">Become a Quokka!</router-link>
-					<button type="submit" class="pure-button pure-button-primary" @click.prevent="login">Login</button>
-					<!-- Todo: Move this! -->
-				</div>
+
 			</div>
 			<img class="quokka-couple" src="/images/quokka-couple.jpg">
 <!--			TODO: Make sure this picture keeps working. -->
@@ -34,7 +35,7 @@ export default {
 	name: "Login",
 	data() {
 		return {
-			usernameLogin: '',
+			emailLogin: '',
 			passwordLogin: '',
 			errorLogin: '',
 		}
@@ -42,11 +43,11 @@ export default {
 	methods: {
 		async login() {
 			this.errorLogin = '';
-			if (!this.usernameLogin || !this.passwordLogin)
+			if (!this.emailLogin || !this.passwordLogin)
 				return;
 			try {
 				let response = await axios.post('/api/users/login', {
-					username: this.usernameLogin,
+					email: this.emailLogin,
 					password: this.passwordLogin,
 				});
 				this.$root.$data.user = response.data.user;
@@ -70,6 +71,12 @@ h1 {
 	text-decoration: underline;
 }
 
+.login-body-box {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 .login-container, .login-container-two {
 	/*background-color: goldenrod;*/
 	/*border: purple 6px solid;*/
@@ -89,10 +96,10 @@ h1 {
 	align-items: center;
 	display: flex;
 	/*padding: 20px;*/
-	margin: 60px 70px;
-	background-color: lightgrey;
-	border: 2px solid black;
-	margin-bottom: 0;
+	/*background-color: lightgrey;*/
+	/*border: 2px solid black;*/
+	border: goldenrod 4px solid;
+	background: bisque;
 }
 
 .login-box-two {
@@ -115,10 +122,13 @@ h1 {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	margin: 60px 70px;
+	margin-bottom: 40px;
 }
 
 .username-container, .password-container-two, .email-container {
-	border-bottom: #132020 2px solid;
+	/*border-bottom: #132020 2px solid;*/
+	border-bottom: goldenrod 4px solid;
 	width: 100%;
 }
 
@@ -138,24 +148,66 @@ h1 {
 
 .create-account-option {
 	display: flex;
-	justify-content: flex-start;
-	width: 85%;
-	margin-left: 70px;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	/*width: 85%;*/
+	/*margin-left: 70px;*/
 }
 
-#createAccount {
-	margin-bottom: 40px;
-	color: black;
+.login-box-buttons {
+	/*color: black;*/
+	margin: 12px 6px;
+	text-decoration: underline;
 	font-family: monospace;
-	font-size: 18px;
+	font-size: 21px;
 	color: #a57940;
+}
 
+.input-box {
+	font-family: "monaco", monospace;
+	font-size: 20px;
+	background: papayawhip;
+	border: goldenrod 2px solid;
+	/*margin: 20px 30px 20px 20px;*/
+	margin: 10px;
+	padding: 3px 7px;
+	margin-left: 0;
+}
+
+.input-label {
+	font-size: 25px;
+}
+
+/*.create-account-option {*/
+/*	display: flex;*/
+/*	justify-content: flex-start;*/
+/*	width: 85%;*/
+/*	margin-left: 70px;*/
+/*}*/
+
+/*#createAccount {*/
+/*	!*margin-bottom: 40px;*!*/
+/*	color: black;*/
+/*	font-family: monospace;*/
+/*	font-size: 18px;*/
+/*	color: #a57940;*/
+
+/*}*/
+
+.error {
+	color: red;
+	font-size: 22px;
+	margin-top: 0;
+	padding-top: 0;
+	margin-bottom: 50px;
 }
 
 .quokka-couple {
 	width: 295px;
 	margin: 10px 70px;
 	border: 2px solid black;
+	margin-bottom: 40px;
 }
 
 @media only screen and (max-width: 900px) {
@@ -168,7 +220,26 @@ h1 {
 
 	.quokka-couple {
 		margin-top: 60px;
+		margin-bottom: 10px;
 		width: 330px;
+	}
+}
+
+@media only screen and (max-width: 600px) {
+	.quokka-couple {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	.login-outer-box {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+	.username-container, .password-container {
+		margin: 0;
+		padding: 10px;
+	}
+	.input-box{
+		width: 175px
 	}
 }
 </style>

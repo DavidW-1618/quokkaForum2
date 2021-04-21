@@ -113,7 +113,7 @@ export default {
 				// this.questions = response.data[0];
 				// console.log("saved posts")
 			} catch (error) {
-				console.log(error);
+				// console.log(error);
 			}
 		},
 		async deletePost() {
@@ -123,7 +123,7 @@ export default {
 				await this.getPosts()
 
 			} catch (error) {
-				console.log(error);
+				// console.log(error);
 			}
 		},
 		async submitPostEdit() {
@@ -135,7 +135,7 @@ export default {
 				});
 				this.post.comment = this.commentIn;
 			} catch (error) {
-				console.log(error);
+				// console.log(error);
 			}
 			this.hideEditForm()
 		}

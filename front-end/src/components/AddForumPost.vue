@@ -89,7 +89,7 @@ export default {
 				// this.questions = response.data[0];
 				// console.log("saved posts")
 			} catch (error) {
-				console.log(error);
+				// console.log(error);
 			}
 		},
 		async getPersons() {
@@ -100,7 +100,7 @@ export default {
 				this.$root.$data.persons = response.data;
 				// console.log("saved people")
 			} catch (error) {
-				console.log(error);
+				// console.log(error);
 			}
 		},
 		showAddForm() {
@@ -118,18 +118,17 @@ export default {
 				timeOfPost: new Date()
 			};
 			// Send Post
-			console.log("question_id:", this.question_id)
+			// console.log("question_id:", this.question_id)
 			if (this.question_id === "-1") {
 				newPost.responseToPost = null
 			} else {
 				newPost.responseToPost = this.question_id
 			}
-			console.log(newPost)
-			console.log("Hello")
+			// console.log(newPost)
 			try {
 				await axios.post('/api/forum_posts', newPost)
 			} catch (error) {
-				console.log(error)
+				// console.log(error)
 				return;
 			}
 			//Reload posts

@@ -111,7 +111,7 @@ export default {
 				// this.questions = response.data[0];
 				// console.log("saved posts")
 			} catch (error) {
-				console.log(error);
+				// console.log(error);
 			}
 		},
 		async getPerson() {
@@ -120,8 +120,8 @@ export default {
 			this.curPerson = await axios.get("/api/persons/" + this.$route.params.personId);
 			this.curPerson = this.curPerson.data;
 			//this.curPerson = this.$root.$data.persons.find(person => person._id === parseInt(this.$route.params.personId));
-			console.log("this.curPerson");
-			console.log(this.curPerson);
+			// console.log("this.curPerson");
+			// console.log(this.curPerson);
 			
 			// this.newFirstName = this.curPerson.firstName;
 			// this.newLastName = this.curPerson.lastName;
@@ -147,7 +147,7 @@ export default {
 				this.$root.$data.persons = response.data;
 				// console.log("saved people")
 			} catch (error) {
-				console.log(error);
+				// console.log(error);
 			}
 		},
 		async editPerson() {
@@ -165,7 +165,7 @@ export default {
 				await this.getPerson();
 				this.errorMsg = "";
 			} catch (error) {
-				console.log(error);
+				// console.log(error);
 				await this.getPerson();
 				this.errorMsg = error + "\n This is likely due to using an email that already belongs to another user.";
 			}
@@ -181,7 +181,7 @@ export default {
 				this.$router.back()
 
 			} catch (error) {
-				console.log(error);
+				// console.log(error);
 			}
 		}
 	}

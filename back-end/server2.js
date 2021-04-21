@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 // connect to the database
-mongoose.connect('mongodb://localhost:27017/quakka_forum', {
+mongoose.connect('mongodb://localhost:27017/quakka_forum5', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -356,4 +356,4 @@ forumPostRouter.get('/', async (req, res) => {
 app.use("/api/persons", personRouter);
 app.use("/api/forum_posts", forumPostRouter);
 
-app.listen(3003, () => console.log('Server listening on port 3003!'));
+app.listen(3003, () => console.log('Server listening on port 3004!'));

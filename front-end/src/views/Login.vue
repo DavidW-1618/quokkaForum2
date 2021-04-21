@@ -79,7 +79,6 @@ h1 {
 
 .login-container, .login-container-two {
 	/*background-color: goldenrod;*/
-	/*border: purple 6px solid;*/
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -178,22 +177,6 @@ h1 {
 .input-label {
 	font-size: 25px;
 }
-
-/*.create-account-option {*/
-/*	display: flex;*/
-/*	justify-content: flex-start;*/
-/*	width: 85%;*/
-/*	margin-left: 70px;*/
-/*}*/
-
-/*#createAccount {*/
-/*	!*margin-bottom: 40px;*!*/
-/*	color: black;*/
-/*	font-family: monospace;*/
-/*	font-size: 18px;*/
-/*	color: #a57940;*/
-
-/*}*/
 
 .error {
 	color: red;

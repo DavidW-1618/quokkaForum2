@@ -45,7 +45,7 @@ export default {
 	},
 	computed: {
 		questions() {
-			console.log(this.$root.$data.forumPosts)
+			// console.log(this.$root.$data.forumPosts)
 			return this.$root.$data.forumPosts
 		}
 	},
@@ -59,7 +59,7 @@ export default {
 				// this.questions = response.data[0];
 				// console.log("saved posts")
 			} catch (error) {
-				console.log(error);
+				// console.log(error);
 			}
 		},
 		async getPersons() {
@@ -70,7 +70,7 @@ export default {
 				this.$root.$data.persons = response.data;
 				// console.log("saved people")
 			} catch (error) {
-				console.log(error);
+				// console.log(error);
 			}
 		},
 		async myCreated() {

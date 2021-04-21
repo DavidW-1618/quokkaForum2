@@ -48,7 +48,7 @@ import axios from "axios";
 export default {
 	methods: {
 		async logout() {
-			console.log("logout()")
+			// console.log("logout()")
 			try {
 				await axios.delete("/api/users");
 				this.$root.$data.user = null;
